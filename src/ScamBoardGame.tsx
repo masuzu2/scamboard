@@ -356,8 +356,9 @@ export default function ScamBoardGame() {
   const [isShaking, setIsShaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showManual, setShowManual] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   
-  const [setupPlayers, setSetupPlayers] = useState([{ name: 'Agent Alpha', avatar: avatarKeys[0], color: playerColors[0], glow: playerGlows[0] }]);
+  const [setupPlayers, setSetupPlayers] = useState([{ name: 'คุณตา/คุณยาย', avatar: avatarKeys[0], color: playerColors[0], glow: playerGlows[0] }]);
 
   const stateRef = useRef(s);
   useEffect(() => { stateRef.current = s; }, [s]);
@@ -416,6 +417,10 @@ export default function ScamBoardGame() {
     }
   };
 
+  const showTutorialPopup = () => {
+    setShowTutorial(true);
+  };
+
   const joinRoom = () => {
     if (socket && joinInput) {
       socket.emit('join_room', joinInput, (res: any) => {
@@ -453,14 +458,22 @@ export default function ScamBoardGame() {
     const savedBadgesStr = localStorage.getItem('scamboard_badges');
     const globalBadges = savedBadgesStr ? JSON.parse(savedBadgesStr) : [];
     
-    const initializedPlayers = setupPlayers.map((p, i) => ({
-      id: `p${i}`, name: p.name, avatar: p.avatar, color: p.color, glow: p.glow,
-      position: 0, coins: 5, hasLifeline: false, finished: false,
-      items: [], isSkipped: false, isProtected: false, plusRoll: 0, consecutive: 0, badges: globalBadges,
-      finishOrder: undefined as number | undefined,
-    }));
+    const initializedPlayers = setupPlayers.map((p, i) => {
+      const randomItems = [
+         SHOP_ITEMS[Math.floor(Math.random() * SHOP_ITEMS.length)]!.id,
+         SHOP_ITEMS[Math.floor(Math.random() * SHOP_ITEMS.length)]!.id
+      ];
+      return {
+        id: `p${i}`, name: p.name, avatar: p.avatar, color: p.color, glow: p.glow,
+        position: 0, coins: 5, hasLifeline: false, finished: false,
+        items: randomItems, isSkipped: false, isProtected: false, plusRoll: 0, consecutive: 0, badges: globalBadges,
+        finishOrder: undefined as number | undefined,
+      };
+    });
     // ✅ Ensure localPlayerId is always set for solo play
     if (!localPlayerId) setLocalPlayerId('p0');
+    
+    setShowTutorial(false);
     updateViewTransition(prev => ({
       ...prev,
       view: 'playing',
@@ -719,15 +732,18 @@ export default function ScamBoardGame() {
     const isCorrect = idx === card.correct;
     const newPlayers = JSON.parse(JSON.stringify(currentState.players)) as Player[];
     
+    let grantedItem = null;
     if (isCorrect) {
       AudioEngine.playCorrect();
-      newPlayers[currentState.currentPlayerIndex]!.coins += 3;
+      const randomItem = SHOP_ITEMS[Math.floor(Math.random() * SHOP_ITEMS.length)]!;
+      newPlayers[currentState.currentPlayerIndex]!.items.push(randomItem.id);
+      grantedItem = randomItem;
       setParticles({ key: Date.now() + Math.random(), color: '#7B2CBF', type: 'rain' });
-      addFloatingText("+3 COINS", "#FFD600");
+      addFloatingText(`ได้รับไอเทม: ${randomItem.name}`, "#A78BFA");
     } else {
       AudioEngine.playWrong();
     }
-    updateS({ ...currentState, players: newPlayers, activeEvent: { type: 'bonus_result', data: { isCorrect, explanation: card.explanation } } });
+    updateS({ ...currentState, players: newPlayers, activeEvent: { type: 'bonus_result', data: { isCorrect, explanation: card.explanation, grantedItem } } });
   };
 
   const buyItem = (item: any) => {
@@ -1009,14 +1025,14 @@ export default function ScamBoardGame() {
           <div className="relative z-10">
             {(!roomCode || isHost) ? (
               <button
-                onClick={startGame}
+                onClick={showTutorialPopup}
                 disabled={setupPlayers.length === 0}
                 className="sb-pressable w-full h-16 relative group overflow-hidden transition-all disabled:opacity-40 rounded-[16px] bg-blue-600 hover:bg-blue-500 disabled:bg-white/5 border border-white/10 shadow-[0_8px_30px_rgba(37,99,235,0.25)] hover:shadow-[0_8px_40px_rgba(37,99,235,0.4)] cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
                 <div className="absolute w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:animate-[slide_1s_ease-in-out_infinite]" />
                 <div className="absolute inset-0 flex items-center justify-between px-6 text-white font-black text-sm md:text-base uppercase tracking-widest">
-                  <span className="flex items-center gap-3"><Play className="w-5 h-5 fill-current text-blue-200" /> Execute Sequence</span>
+                  <span className="flex items-center gap-3"><Play className="w-5 h-5 fill-current text-blue-200" /> เริ่มเกม (START)</span>
                   <ChevronRight className="w-6 h-6 text-white/50 group-hover:text-white transition-colors group-hover:translate-x-1" />
                 </div>
               </button>
@@ -1024,12 +1040,38 @@ export default function ScamBoardGame() {
               <div className="w-full h-16 bg-white/[0.03] border border-white/10 rounded-[16px] flex items-center justify-center relative overflow-hidden shadow-inner">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent animate-[slide_2s_linear_infinite]" />
                 <div className="text-cyan-400 font-bold font-mono text-xs tracking-widest uppercase flex items-center gap-3 relative z-10">
-                  <Activity className="w-4 h-4 animate-spin" /> Awaiting Host Authorization
+                  <Activity className="w-4 h-4 animate-spin" /> รอหัวหน้าห้องกดเริ่มเกม...
                 </div>
               </div>
             )}
           </div>
         </motion.div>
+
+        {/* TUTORIAL MODAL POPUP */}
+        {showTutorial && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="relative bg-slate-900 border border-purple-500/50 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-[0_0_50px_rgba(124,58,237,0.3)] text-white"
+            >
+              <h2 className="text-2xl md:text-3xl font-black text-purple-400 mb-4 tracking-wider text-center">วิธีเล่นเกม (How to Play)</h2>
+              <div className="space-y-4 text-base md:text-lg text-slate-300 leading-relaxed font-sans mb-8">
+                <p>🎲 <strong className="text-white">ทอยลูกเต๋า:</strong> สลับกันทอยลูกเต๋าเพื่อเดินไปข้างหน้า</p>
+                <p>🛡️ <strong className="text-white">คำถามไซเบอร์:</strong> หากตกช่องไซเบอร์ คุณต้องตอบคำถามกลลวงมิจฉาชีพให้ถูกเพื่อลดพลังบอส</p>
+                <p>🃏 <strong className="text-white">การ์ดไอเทม:</strong> คุณจะได้รับการ์ดตั้งต้นคนละ 2 ใบตอนเริ่มเกม และหาเพิ่มได้จากช่องโบนัส หรือซื้อในตลาดมืด</p>
+                <p>💀 <strong className="text-white">ระวังบอส!:</strong> หากทุกคนตอบผิดบ่อยๆ จนพลังบอสถึง 100% เกมจะจบและทุกคนแพ้ทันที (รีบเดินเข้าเส้นชัย!)</p>
+              </div>
+              <button 
+                onClick={startGame}
+                className="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white text-xl font-bold rounded-xl shadow-lg transition-all active:scale-95"
+              >
+                เข้าใจแล้ว เริ่มเล่นเลย!
+              </button>
+            </motion.div>
+          </div>
+        )}
       </div>
     );
   }
@@ -1137,15 +1179,15 @@ export default function ScamBoardGame() {
           <div className="bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-red-500/20 shadow-[0_0_20px_rgba(244,63,94,0.1)] flex flex-col">
             <div className="flex justify-between items-center mb-1">
               <div className="flex items-center gap-2">
-                <Skull className={cn("w-4 h-4", s.bossHealth > 75 ? "text-red-500 animate-pulse" : "text-rose-400")} />
-                <span className="text-[10px] font-black text-rose-300 uppercase tracking-widest">SCAMMER AI</span>
+                <Skull className={cn("w-5 h-5 md:w-6 md:h-6", s.bossHealth > 75 ? "text-red-500 animate-pulse" : "text-rose-400")} />
+                <span className="text-xs md:text-sm font-black text-rose-300 tracking-wider">บอสมิจฉาชีพ (AI)</span>
               </div>
-              <div className="flex gap-4">
-                <span className="text-[10px] font-black text-rose-400 tracking-widest">THREAT LVL {s.roundCount}</span>
-                <span className="text-sm font-black text-white drop-shadow-[0_0_10px_#ef4444]">{s.bossHealth}%</span>
+              <div className="flex gap-4 items-center">
+                <span className="text-xs md:text-sm font-black text-rose-400 tracking-wider">ความอันตราย LVL {s.roundCount}</span>
+                <span className="text-lg md:text-xl font-black text-white drop-shadow-[0_0_10px_#ef4444]">{s.bossHealth}%</span>
               </div>
             </div>
-            <div className="w-full h-1.5 bg-rose-950/50 rounded-full overflow-hidden shadow-inner">
+            <div className="w-full h-2 bg-rose-950/50 rounded-full overflow-hidden shadow-inner">
               <div className="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-1000 ease-out" style={{ width: `${s.bossHealth}%`, boxShadow: '0 0 15px #f43f5e' }} />
             </div>
           </div>
@@ -1253,10 +1295,10 @@ export default function ScamBoardGame() {
              <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
              <div className="absolute w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:animate-[slide_1s_ease-in-out_infinite] group-disabled:hidden" />
              
-             <div className="absolute inset-0 flex items-center justify-center gap-2 md:gap-3 text-white font-black text-[11px] md:text-sm uppercase tracking-widest group-disabled:text-slate-500">
-                <Dices className={cn("w-4 h-4 md:w-6 md:h-6 fill-white/20", s.turnPhase === 'rolling' && "animate-spin")} />
+             <div className="absolute inset-0 flex items-center justify-center gap-2 md:gap-3 text-white font-black text-[14px] md:text-lg tracking-wider group-disabled:text-slate-500">
+                <Dices className={cn("w-5 h-5 md:w-8 md:h-8 fill-white/20", s.turnPhase === 'rolling' && "animate-spin")} />
                 <span className={cn(s.turnPhase === 'rolling' && "animate-pulse text-cyan-300")}>
-                   {!isMyTurn ? 'Awaiting Turn...' : s.turnPhase === 'rolling' ? 'Executing Protocol...' : 'Execute Roll'}
+                   {!isMyTurn ? 'รอคิวของคุณ...' : s.turnPhase === 'rolling' ? 'กำลังทอยลูกเต๋า...' : 'ทอยลูกเต๋า (ROLL)'}
                 </span>
              </div>
           </button>
@@ -1497,7 +1539,7 @@ export default function ScamBoardGame() {
                        <Users className="w-16 h-16 text-cyan-400 relative z-10" />
                     </div>
                     <h3 className="text-4xl font-black text-white mb-4 tracking-tight uppercase">Initiate Protocol?</h3>
-                    <p className="text-cyan-400 mb-12 text-lg font-mono tracking-widest opacity-80">TEAM_CONSULT_AVAILABLE</p>
+                    <p className="text-cyan-400 mb-12 text-lg font-mono tracking-widest opacity-80">เรียกใช้ความช่วยเหลือทีม (TEAM CONSULT)</p>
                     <div className="flex gap-4">
                       <button onClick={() => updateS({ ...s, activeEvent: { type: 'cyber', data: s.activeEvent.data.card, usedHelp: false, taunt: SCAMMER_TAUNTS[0], betActive: false, expiresAt: Date.now() + Math.random() + 10999 } })} disabled={!isMyTurn} className="flex-1 h-16 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-bold uppercase tracking-widest transition-colors rounded-[16px] hover-lift">
                         Bypass
