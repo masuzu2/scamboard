@@ -494,7 +494,7 @@ export default function ScamBoardGame() {
       updateS(prev => {
         const np = JSON.parse(JSON.stringify(prev.players)) as Player[];
         np[prev.currentPlayerIndex].isSkipped = false;
-        return { ...prev, players: np };
+        return { ...prev, turnPhase: 'turnEnd', players: np };
       });
       setTimeout(() => endTurn(), 2000);
       return;
@@ -624,7 +624,6 @@ export default function ScamBoardGame() {
       addFloatingText("BLACK MARKET", "#A78BFA");
       setParticles({ key: Date.now() + Math.random(), color: '#A78BFA', type: 'center' });
       updateS(nextState);
-      setTimeout(() => endTurn(), 2000);
       return;
     }
     
@@ -1163,7 +1162,14 @@ export default function ScamBoardGame() {
                     {isMuted ? <VolumeX className="w-4 h-4 text-slate-500" /> : <Volume2 className="w-4 h-4 text-pink-400 transition-colors drop-shadow-[0_0_8px_#f472b6]" />}
                  </button>
                  
-                 <button onClick={() => setShowShop(!showShop)} className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all relative group shadow-inner overflow-hidden", showShop ? "bg-purple-500/20 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]" : "bg-white/[0.02] border-white/10 hover:border-purple-400/50 hover:bg-purple-500/10")}>
+                 <button onClick={() => {
+                    if (s.turnPhase === 'resolvingEvent' && showShop && isMyTurn) {
+                       setShowShop(false);
+                       endTurn();
+                    } else {
+                       setShowShop(!showShop);
+                    }
+                 }} className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all relative group shadow-inner overflow-hidden", showShop ? "bg-purple-500/20 border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]" : "bg-white/[0.02] border-white/10 hover:border-purple-400/50 hover:bg-purple-500/10")}>
                     <div className={cn("absolute inset-0 transition-opacity", showShop ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>
                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent" />
                     </div>
@@ -1219,13 +1225,23 @@ export default function ScamBoardGame() {
                       <div className="text-[11px] text-slate-400 leading-relaxed">{item.description}</div>
                       <button 
                         onClick={() => buyItem(item)} 
-                        disabled={!isMyTurn || s.turnPhase !== 'idle'}
+                        disabled={!isMyTurn || (s.turnPhase !== 'idle' && s.turnPhase !== 'resolvingEvent')}
                         className="mt-3 w-full py-3 bg-purple-600 hover:bg-purple-500 disabled:bg-slate-800 disabled:opacity-50 disabled:border-transparent text-white font-black text-xs uppercase tracking-widest transition-all rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(168,85,247,0.3)] hover:shadow-[0_4px_30px_rgba(168,85,247,0.5)]"
                       >
                         Acquire Protocol
                       </button>
                    </div>
                 ))}
+                {s.turnPhase === 'resolvingEvent' && isMyTurn && (
+                   <button 
+                      onClick={() => { AudioEngine.playClick(); setShowShop(false); endTurn(); }}
+                      className="w-full mt-4 h-14 relative group overflow-hidden transition-all rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 shadow-lg"
+                   >
+                      <div className="absolute inset-0 flex items-center justify-center text-white font-black text-sm md:text-base uppercase tracking-widest">
+                         ปิดตลาด (CLOSE & END TURN)
+                      </div>
+                   </button>
+                )}
              </div>
           ) : (
              <div className="space-y-4">
@@ -1541,10 +1557,10 @@ export default function ScamBoardGame() {
                     <h3 className="text-4xl font-black text-white mb-4 tracking-tight uppercase">Initiate Protocol?</h3>
                     <p className="text-cyan-400 mb-12 text-lg font-mono tracking-widest opacity-80">เรียกใช้ความช่วยเหลือทีม (TEAM CONSULT)</p>
                     <div className="flex gap-4">
-                      <button onClick={() => updateS({ ...s, activeEvent: { type: 'cyber', data: s.activeEvent.data.card, usedHelp: false, taunt: SCAMMER_TAUNTS[0], betActive: false, expiresAt: Date.now() + Math.random() + 10999 } })} disabled={!isMyTurn} className="flex-1 h-16 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-bold uppercase tracking-widest transition-colors rounded-[16px] hover-lift">
+                      <button onClick={() => updateS({ ...s, activeEvent: { type: 'cyber', data: s.activeEvent.data.card, usedHelp: false, taunt: SCAMMER_TAUNTS[0], betActive: false, expiresAt: Date.now() + Math.random() + 10999, isFirewall: s.activeEvent.data.isFirewall } })} disabled={!isMyTurn} className="flex-1 h-16 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-slate-300 hover:text-white font-bold uppercase tracking-widest transition-colors rounded-[16px] hover-lift">
                         Bypass
                       </button>
-                      <button onClick={() => updateS({ ...s, activeEvent: { type: 'cyber', data: s.activeEvent.data.card, usedHelp: true, taunt: SCAMMER_TAUNTS[0], betActive: false, expiresAt: Date.now() + Math.random() + 10999 } })} disabled={!isMyTurn} className="flex-1 h-16 bg-cyan-600 hover:bg-cyan-500 text-white border border-white/10 font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_#00D4FF44] rounded-[16px] hover-lift">Activate</button>
+                      <button onClick={() => updateS({ ...s, activeEvent: { type: 'cyber', data: s.activeEvent.data.card, usedHelp: true, taunt: SCAMMER_TAUNTS[0], betActive: false, expiresAt: Date.now() + Math.random() + 10999, isFirewall: s.activeEvent.data.isFirewall } })} disabled={!isMyTurn} className="flex-1 h-16 bg-cyan-600 hover:bg-cyan-500 text-white border border-white/10 font-black uppercase tracking-widest transition-colors shadow-[0_0_15px_#00D4FF44] rounded-[16px] hover-lift">Activate</button>
                     </div>
                   </div>
                 )}
@@ -1647,10 +1663,10 @@ export default function ScamBoardGame() {
                     </div>
                     <button 
                         onClick={() => { AudioEngine.playClick(); endTurn(); }} 
-                        className="w-full h-16 relative group overflow-hidden transition-all disabled:opacity-50 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 shadow-lg"
+                        className="w-full h-16 relative group overflow-hidden transition-all disabled:opacity-50 rounded-2xl bg-purple-600 hover:bg-purple-500 border border-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                      >
-                        <div className="absolute inset-0 flex items-center justify-center text-white font-black text-sm md:text-base uppercase tracking-[0.3em] group-disabled:text-slate-500">
-                           Close Connection
+                        <div className="absolute inset-0 flex items-center justify-center text-white font-black text-lg md:text-xl uppercase tracking-widest group-disabled:text-slate-300">
+                           ปิดหน้าต่าง (CLOSE)
                         </div>
                      </button>
                   </div>
