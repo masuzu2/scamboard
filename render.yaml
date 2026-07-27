@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: scamboard-server
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
