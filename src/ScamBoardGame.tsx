@@ -513,9 +513,7 @@ export default function ScamBoardGame() {
         const newPlayers = JSON.parse(JSON.stringify(prev.players)) as Player[];
         const p = newPlayers[prev.currentPlayerIndex]!;
         if (p.position < BOARD_SIZE - 1) p.position += 1;
-        if (prev.board[p.position]?.type === 'firewall' && currentStep < steps) {
-           stoppedRef.value = true;
-        }
+        // ❌ Removed firewall hard-stop checkpoint logic
         return { ...prev, players: newPlayers };
       });
       
