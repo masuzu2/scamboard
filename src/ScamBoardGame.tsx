@@ -341,6 +341,7 @@ export default function ScamBoardGame() {
     diceValue: 1,
     activeEvent: null as any,
     bossHealth: 0,
+    roundCount: 1,
   });
 
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -449,10 +450,13 @@ export default function ScamBoardGame() {
     AudioEngine.init();
     AudioEngine.playWin();
     AudioEngine.startBGM();
+    const savedBadgesStr = localStorage.getItem('scamboard_badges');
+    const globalBadges = savedBadgesStr ? JSON.parse(savedBadgesStr) : [];
+    
     const initializedPlayers = setupPlayers.map((p, i) => ({
       id: `p${i}`, name: p.name, avatar: p.avatar, color: p.color, glow: p.glow,
       position: 0, coins: 5, hasLifeline: false, finished: false,
-      items: [], isSkipped: false, isProtected: false, plusRoll: 0, consecutive: 0, badges: [],
+      items: [], isSkipped: false, isProtected: false, plusRoll: 0, consecutive: 0, badges: globalBadges,
       finishOrder: undefined as number | undefined,
     }));
     // ✅ Ensure localPlayerId is always set for solo play
@@ -464,7 +468,8 @@ export default function ScamBoardGame() {
       board: generateBoard(),
       currentPlayerIndex: 0,
       turnPhase: 'idle',
-      bossHealth: 0
+      bossHealth: 0,
+      roundCount: 1
     }));
   };
 
@@ -638,12 +643,16 @@ export default function ScamBoardGame() {
       }
 
       let nextIdx = (prev.currentPlayerIndex + 1) % prev.players.length;
-      let loopCount = 0;
-      while (prev.players[nextIdx].finished && loopCount < prev.players.length) {
+      let newRoundCount = prev.roundCount;
+      if (nextIdx === 0) newRoundCount++;
+      
+      let loops = 0;
+      while (prev.players[nextIdx].finished && loops < prev.players.length) {
         nextIdx = (nextIdx + 1) % prev.players.length;
-        loopCount++;
+        if (nextIdx === 0) newRoundCount++;
+        loops++;
       }
-      return { ...prev, activeEvent: null, turnPhase: 'idle', currentPlayerIndex: nextIdx };
+      return { ...prev, activeEvent: null, turnPhase: 'idle', currentPlayerIndex: nextIdx, roundCount: newRoundCount };
     });
   };
 
@@ -673,7 +682,10 @@ export default function ScamBoardGame() {
          nextBoard[p.position] = { ...nextBoard[p.position]!, type: 'safe', label: 'HACKED NODE' };
          addFloatingText("FIREWALL BREACHED!", "#F97316");
       } else if (newPlayers[currentState.currentPlayerIndex]!.consecutive === 3) {
-         newPlayers[currentState.currentPlayerIndex]!.badges.push('CYBER GUARDIAN');
+         if (!newPlayers[currentState.currentPlayerIndex]!.badges.includes('CYBER GUARDIAN')) {
+            newPlayers[currentState.currentPlayerIndex]!.badges.push('CYBER GUARDIAN');
+            localStorage.setItem('scamboard_badges', JSON.stringify(newPlayers[currentState.currentPlayerIndex]!.badges));
+         }
          newPlayers[currentState.currentPlayerIndex]!.plusRoll = 1;
          addFloatingText("CYBER GUARDIAN!", "#00E5FF");
       } else {
@@ -684,9 +696,15 @@ export default function ScamBoardGame() {
     } else {
       AudioEngine.playWrong();
       triggerShake();
-      newBossHealth = Math.min(100, newBossHealth + 15);
+      
+      // Boss AI Difficulty scaling: Threat Level increases with roundCount
+      const threatMultiplier = 1 + (currentState.roundCount * 0.2); // +20% threat per round
+      const damageToBossHealth = Math.floor(15 * threatMultiplier);
+      
+      newBossHealth = Math.min(100, newBossHealth + damageToBossHealth);
+      
       // ✅ Fix: resultWrong is already negative in gameData, Math.abs was double-negating
-      const coinsLost = card.resultWrong < 0 ? Math.abs(card.resultWrong) * multiplier : card.resultWrong * multiplier;
+      const coinsLost = Math.floor((card.resultWrong < 0 ? Math.abs(card.resultWrong) : card.resultWrong) * multiplier);
       newPlayers[currentState.currentPlayerIndex]!.coins = Math.max(0, newPlayers[currentState.currentPlayerIndex]!.coins - coinsLost);
       newPlayers[currentState.currentPlayerIndex]!.consecutive = 0;
       addFloatingText(`-${coinsLost} COINS`, "#FF007F");
@@ -1116,21 +1134,23 @@ export default function ScamBoardGame() {
            </div>
         </div>
 
-        {/* BOSS HEALTH HUD */}
-        <div className="px-4 md:px-6 py-3 md:py-4 relative z-10 border-b border-white/5 bg-slate-900/40 shrink-0">
-           <div className="bg-white/[0.02] border border-white/10 p-3 md:p-4 rounded-2xl relative overflow-hidden group shadow-inner">
-              <div className="flex justify-between items-center mb-2 md:mb-3 relative z-10">
-                 <div className="flex items-center gap-2">
-                    <Skull className="w-4 h-4 md:w-5 md:h-5 text-red-500 animate-pulse drop-shadow-[0_0_8px_#ef4444]" />
-                    <span className="text-[9px] md:text-[10px] font-black text-red-400 uppercase tracking-widest">Global_Threat</span>
-                 </div>
-                 <span className="text-xl md:text-2xl font-black text-white drop-shadow-[0_0_10px_#ef4444]">{s.bossHealth}%</span>
+        {/* BOSS AI THREAT LEVEL HUD */}
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 w-64 md:w-96 flex flex-col gap-2 z-50 pointer-events-none">
+          <div className="bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-red-500/20 shadow-[0_0_20px_rgba(244,63,94,0.1)] flex flex-col">
+            <div className="flex justify-between items-center mb-1">
+              <div className="flex items-center gap-2">
+                <Skull className={cn("w-4 h-4", s.bossHealth > 75 ? "text-red-500 animate-pulse" : "text-rose-400")} />
+                <span className="text-[10px] font-black text-rose-300 uppercase tracking-widest">SCAMMER AI</span>
               </div>
-              
-              <div className="h-2 md:h-3 w-full bg-black/50 rounded-full overflow-hidden border border-white/10 relative z-10 shadow-inner">
-                 <div className="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-1000 ease-out" style={{ width: `${s.bossHealth}%`, boxShadow: '0 0 15px #f43f5e' }} />
+              <div className="flex gap-4">
+                <span className="text-[10px] font-black text-rose-400 tracking-widest">THREAT LVL {s.roundCount}</span>
+                <span className="text-sm font-black text-white drop-shadow-[0_0_10px_#ef4444]">{s.bossHealth}%</span>
               </div>
-           </div>
+            </div>
+            <div className="w-full h-1.5 bg-rose-950/50 rounded-full overflow-hidden shadow-inner">
+              <div className="h-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-1000 ease-out" style={{ width: `${s.bossHealth}%`, boxShadow: '0 0 15px #f43f5e' }} />
+            </div>
+          </div>
         </div>
         
         {/* MAIN CONTENT AREA */}
