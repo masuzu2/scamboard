@@ -402,6 +402,16 @@ export default function ScamBoardGame() {
   const targetX = activeTileForCamera ? -(activeTileForCamera.x + TILE_SIZE / 2) : 0;
   const targetY = activeTileForCamera ? -(activeTileForCamera.y + TILE_SIZE / 2) : 0;
 
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'th-TH';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const createRoom = () => {
     if (socket) {
       socket.emit('create_room', (res: any) => {
@@ -1567,8 +1577,13 @@ export default function ScamBoardGame() {
 
                 {s.activeEvent.type === 'cyber' && (
                   <div>
-                    <div className="inline-flex items-center gap-3 px-4 py-2 bg-pink-500/10 border-l-4 border-pink-500 text-pink-400 text-sm font-black uppercase tracking-widest mb-8">
-                       <ShieldAlert className="w-5 h-5" /> Threat Detected
+                    <div className="flex items-center justify-between mb-8">
+                       <div className="inline-flex items-center gap-3 px-4 py-2 bg-pink-500/10 border-l-4 border-pink-500 text-pink-400 text-sm font-black uppercase tracking-widest">
+                          <ShieldAlert className="w-5 h-5" /> Threat Detected
+                       </div>
+                       <button onClick={() => speakText(`${s.activeEvent.data.title}. สถานการณ์: ${s.activeEvent.data.situation}. ข้อ 1: ${s.activeEvent.data.optionA}. ข้อ 2: ${s.activeEvent.data.optionB}`)} className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/40 border border-cyan-500/50 rounded-full text-cyan-400 font-bold transition-colors">
+                          <Volume2 className="w-5 h-5" /> ฟังคำถาม
+                       </button>
                     </div>
                     <h3 className="text-3xl font-black mb-8 text-white leading-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{s.activeEvent.data.title}</h3>
                     <div className="text-xl text-slate-300 mb-10 p-8 bg-black/20 border border-white/5 rounded-2xl relative overflow-hidden font-mono leading-relaxed shadow-inner">
@@ -1621,8 +1636,13 @@ export default function ScamBoardGame() {
 
                 {s.activeEvent.type === 'bonus' && (
                   <div>
-                    <div className="inline-flex items-center gap-3 px-4 py-2 bg-purple-500/10 border-l-4 border-purple-500 text-purple-400 text-sm font-black uppercase tracking-widest mb-8">
-                       <Gift className="w-5 h-5" /> Data Fragment
+                    <div className="flex items-center justify-between mb-8">
+                       <div className="inline-flex items-center gap-3 px-4 py-2 bg-purple-500/10 border-l-4 border-purple-500 text-purple-400 text-sm font-black uppercase tracking-widest">
+                          <Gift className="w-5 h-5" /> Data Fragment
+                       </div>
+                       <button onClick={() => speakText(`คำถาม: ${s.activeEvent.data.question}. ${s.activeEvent.data.options.map((o:string, i:number) => `ข้อ ${i+1}: ${o}`).join('. ')}`)} className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/40 border border-cyan-500/50 rounded-full text-cyan-400 font-bold transition-colors">
+                          <Volume2 className="w-5 h-5" /> ฟังคำถาม
+                       </button>
                     </div>
                     <div className="text-3xl text-white font-black mb-12 leading-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{s.activeEvent.data.question}</div>
                     
@@ -1810,7 +1830,26 @@ export default function ScamBoardGame() {
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4=')] opacity-20 pointer-events-none" />
               <Skull className="w-40 h-40 text-red-500 mx-auto mb-10 drop-shadow-[0_0_20px_rgba(244,63,94,1)] relative z-10" />
               <h2 className="text-6xl md:text-8xl font-black mb-6 text-red-500 tracking-tighter uppercase drop-shadow-[0_0_20px_rgba(244,63,94,0.8)] relative z-10">FATAL ERROR</h2>
-              <p className="text-2xl text-rose-400 mb-16 font-bold tracking-widest uppercase relative z-10 bg-rose-950/40 inline-block px-6 py-2 border border-rose-500/30 rounded-2xl">The Scammer AI reached 100% capacity.<br/><span className="text-white">Mainframe destroyed.</span></p>
+              <p className="text-2xl text-rose-400 mb-12 font-bold tracking-widest uppercase relative z-10 bg-rose-950/40 inline-block px-6 py-2 border border-rose-500/30 rounded-2xl">The Scammer AI reached 100% capacity.<br/><span className="text-white">Mainframe destroyed.</span></p>
+
+              <div className="bg-red-500/10 border border-red-500/30 rounded-3xl p-8 mb-12 text-left relative overflow-hidden shadow-inner max-h-[30vh] overflow-y-auto custom-scrollbar z-10">
+                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent pointer-events-none" />
+                 <h3 className="text-xl md:text-2xl font-black text-red-400 mb-6 flex items-center gap-3 relative z-10"><ShieldAlert className="w-6 h-6 md:w-8 md:h-8 shrink-0" /> จุดอ่อนที่คุณพลาดไป (LESSONS LEARNED)</h3>
+                 <ul className="space-y-4 relative z-10">
+                    {s.usedCyber.slice(0, 3).map(id => {
+                       const card = cyberCards.find(c => c.id === id);
+                       return card ? (
+                         <li key={id} className="text-slate-300 text-sm md:text-lg leading-relaxed flex gap-4">
+                            <span className="text-red-400 mt-1">!</span>
+                            <span><strong className="text-white">{card.title}:</strong> {card.explanation}</span>
+                         </li>
+                       ) : null;
+                    })}
+                    {s.usedCyber.length === 0 && (
+                       <li className="text-slate-300 text-lg leading-relaxed">โชคร้ายไปหน่อย บอสแฮ็กระบบไปก่อนที่คุณจะได้ป้องกันตัว!</li>
+                    )}
+                 </ul>
+              </div>
               
               <button 
                 onClick={() => setS(prev => ({ ...prev, view: 'menu' }))} 
