@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, Environment, Text, ContactShadows, SpotLight, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -166,8 +166,6 @@ const SceneManager = ({ board, players, currentPlayerIndex }: { board: any[], pl
     
     state.camera.position.lerp(new THREE.Vector3(camTargetX, camTargetY, camTargetZ), 0.05);
     
-    // Look at the player
-    const lookAtTarget = new THREE.Vector3(targetX, 0, targetZ);
     // We can't easily lerp lookAt directly without a dummy object, but OrbitControls handles it if we update its target.
     // However, since we want cinematic movement, we'll manually point the camera.
     // Actually, letting OrbitControls do it is easier. See below in the return.
