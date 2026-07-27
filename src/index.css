@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   SCAMBOARD — CYBERPUNK HUD DESIGN SYSTEM
+   Source: ui-ux-pro-max skill → Gaming palette + Cyberpunk UI + Modern Dark Cinema
+   ──────────────────────────────────────────────────────────
+   BG:        #0F0F23  (Gaming deep)   ← skill output
+   Card:      #1E1C35                  ← skill output
+   Primary:   #7C3AED  (neon purple)   ← skill Gaming primary
+   Accent:    #F43F5E  (rose)          ← skill Gaming accent
+   Cyan HUD:  #00D4FF                  ← Cyberpunk UI
+   Font:      Orbitron 700–900 (H) · JetBrains Mono 400–500 (body)
+   ============================================================ */
+
+/* ── Design Tokens (from skill output) ── */
+:root {
+  /* Skill: Gaming palette */
+  --sb-bg:          #0F0F23;
+  --sb-bg-base:     #050507;
+  --sb-card:        #1E1C35;
+  --sb-card-high:   #27273B;
+  --sb-border:      rgba(255,255,255,0.08);
+  --sb-border-mid:  rgba(255,255,255,0.12);
+  --sb-primary:     #7C3AED;
+  --sb-primary-glow:rgba(124,58,237,0.25);
+  --sb-secondary:   #A78BFA;
+  --sb-accent:      #F43F5E;
+  --sb-accent-glow: rgba(244,63,94,0.25);
+  --sb-cyan:        #00D4FF;
+  --sb-cyan-glow:   rgba(0,212,255,0.2);
+  --sb-gold:        #F59E0B;
+  --sb-green:       #00FF88;
+  --sb-fg:          #E2E8F0;
+  --sb-fg-muted:    #94A3B8;
+  /* Skill: easing spec */
+  --sb-ease:        cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-radius:      16px;
+  --sb-radius-lg:   24px;
+  --sb-radius-xl:   32px;
+}
+
+@theme {
+  --font-sans:    'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+  --font-heading: 'Orbitron', 'IBM Plex Sans Thai', sans-serif;
+  /* keep old compat tokens */
+  --color-void:    #0F0F23;
+  --color-card:    #1E1C35;
+  --color-muted:   #27273B;
+  --color-border:  rgba(255,255,255,0.08);
+  --color-acc1: #00FF88;
+  --color-acc2: #F43F5E;
+  --color-acc3: #00D4FF;
+  --color-warn: #F59E0B;
+  --color-danger: #F43F5E;
+  --color-text-main: #E2E8F0;
+  --color-text-muted:#94A3B8;
+}
+
+/* ── Base ── */
+body {
+  margin: 0; padding: 0; overflow: hidden;
+  background: var(--sb-bg-base);
+  color: var(--sb-fg);
+  font-family: var(--font-sans);
+}
+
+/* Skill spec: Orbitron 700–900, 42px H1, letterSpacing 4, uppercase */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Skill-derived Utilities ── */
+@layer utilities {
+  /* Skill: borderRadius 16 on all cards, border rgba(255,255,255,0.08) */
+  .sb-card {
+    background: var(--sb-card);
+    border: 1px solid var(--sb-border);
+    border-radius: var(--sb-radius);
+    backdrop-filter: blur(12px);
+  }
+  .sb-card-glass {
+    background: rgba(30,28,53,0.6);
+    border: 1px solid var(--sb-border-mid);
+    border-radius: var(--sb-radius);
+    backdrop-filter: blur(20px);
+  }
+  /* Skill: accent glow behind primary button */
+  .sb-btn-primary {
+    background: var(--sb-primary);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--sb-radius);
+    box-shadow: 0 8px 30px var(--sb-primary-glow);
+    transition: all 200ms var(--sb-ease);
+  }
+  .sb-btn-primary:hover {
+    background: #6D28D9;
+    box-shadow: 0 8px 40px rgba(124,58,237,0.45);
+    transform: translateY(-1px);
+  }
+  /* Skill: scale press 0.97 → 1.0 */
+  .sb-pressable:active { transform: scale(0.97); }
+
+  /* Cyberpunk scanline overlay (optional, subtle) */
+  .sb-scanlines {
+    position: relative;
+  }
+  .sb-scanlines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.04) 2px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Neon text glows — using skill-specified colors */
+  .text-glow-cyan   { text-shadow: 0 0 12px rgba(0,212,255,0.8); }
+  .text-glow-purple { text-shadow: 0 0 12px rgba(124,58,237,0.8); }
+  .text-glow-green  { text-shadow: 0 0 12px rgba(0,255,136,0.8); }
+  .text-glow-danger { text-shadow: 0 0 12px rgba(244,63,94,0.8); }
+  /* keep compat */
+  .box-glow-cyan    { box-shadow: 0 0 20px rgba(0,212,255,0.3); }
+  .box-glow-green   { box-shadow: 0 0 20px rgba(0,255,136,0.3); }
+
+  /* Legacy compat */
+  .glass-panel, .glass-card { @apply sb-card; }
+  .btn-game { @apply sb-btn-primary; }
+  .bg-animated-gradient, .bg-grid, .bg-circuit { display: none; background: none; }
+}
+
+/* ── Dice ── */
+.dice-cube { position:relative; width:120px; height:120px; transform-style:preserve-3d; }
+.dice-face {
+  position:absolute; width:120px; height:120px;
+  background:white; border:2px solid #e2e8f0;
+  border-radius:12px; display:flex; align-items:center; justify-content:center;
+  font-size:4rem; font-weight:bold; color:#0f172a;
+  box-shadow:inset 0 0 15px rgba(0,0,0,0.1);
+}
+.dice-face-1{transform:translateZ(60px);}
+.dice-face-6{transform:rotateY(180deg) translateZ(60px);}
+.dice-face-2{transform:rotateX(-90deg) translateZ(60px);}
+.dice-face-5{transform:rotateX(90deg) translateZ(60px);}
+.dice-face-3{transform:rotateY(-90deg) translateZ(60px);}
+.dice-face-4{transform:rotateY(90deg) translateZ(60px);}
+
+/* ── Keyframes ── */
+
+@keyframes gradientBG {
+  0%   { background-position:0% 50%; }
+  50%  { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50%      { transform:translateY(-10px); }
+}
+@keyframes float-slow {
+  0%,100% { transform:translateY(0) rotate(0deg); }
+  50%      { transform:translateY(-20px) rotate(2deg); }
+}
+@keyframes pulse-soft {
+  0%,100% { transform:scale(1); opacity:1; }
+  50%      { transform:scale(1.05); opacity:.8; }
+}
+@keyframes pulse-ring {
+  0%   { transform:scale(.9); box-shadow:0 0 0 0 rgba(0,212,255,.6); }
+  70%  { transform:scale(1.3); box-shadow:0 0 0 25px rgba(0,212,255,0); }
+  100% { transform:scale(.9); box-shadow:0 0 0 0 rgba(0,212,255,0); }
+}
+/* Skill: neon flicker */
+@keyframes neonFlicker {
+  0%,18%,22%,25%,53%,57%,100% { opacity:1; }
+  20%,24%,55%                  { opacity:.5; }
+}
+/* Skill: glitch */
+@keyframes glitchSkew {
+  0%,100% { transform:skewX(0); }
+  10%      { transform:skewX(-2deg); }
+  20%      { transform:skewX(1.5deg); }
+  30%      { transform:skewX(0); }
+}
+@keyframes pathPulse {
+  0%,100% { opacity:.7; }
+  50%      { opacity:1; }
+}
+@keyframes tileEnter {
+  0%   { opacity:0; transform:translateY(60px) scale(.7); }
+  60%  { opacity:1; }
+  100% { transform:translateY(0) scale(1); }
+}
+@keyframes ambientGlow {
+  0%,100% { opacity:.4; transform:scale(1); }
+  50%      { opacity:.7; transform:scale(1.08); }
+}
+@keyframes dash-flow { to { stroke-dashoffset:-100; } }
+
+.animate-float       { animation:float 3.5s ease-in-out infinite; }
+.animate-float-slow  { animation:float-slow 6s ease-in-out infinite; }
+.animate-pulse-ring  { animation:pulse-ring 2.5s cubic-bezier(.215,.61,.355,1) infinite; }
+.animate-pulse-soft  { animation:pulse-soft 3s ease-in-out infinite; }
+.animate-neon-flicker{ animation:neonFlicker 4s infinite; }
+.animate-glitch      { animation:glitchSkew 3s infinite; }
+.animate-dash-flow   { animation:dash-flow 2s linear infinite; }
+.animate-ambient     { animation:ambientGlow 4s ease-in-out infinite; }
+
+/* ── Scrollbar ── */
+.custom-scrollbar::-webkit-scrollbar       { width:4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background:rgba(0,0,0,.3); border-radius:4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background:rgba(0,212,255,.5); border-radius:4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background:rgba(0,212,255,.8); }
+
+/* ── Stand-up character (Exact camera inverse) ── */
+.stand-up {
+  transform:rotateZ(22deg) rotateX(-52deg) translateY(-10px);
+  transform-origin:bottom center;
+}
+
+/* ── Glowing 3D Base Slices ── */
+.base-slice {
+  position: absolute;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(10,10,20,0.9);
+  pointer-events: none;
+}
+
+/* ── Interactive Hover Utilities ── */
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.8);
+}
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+/* ============================================================
+   TILE SYSTEM — Skill-informed colors
+   Each tile: solid colored top + extruded sides via translateZ slices
+   The isometric camera (rotateX52 rotateZ-22) reveals side faces naturally
+   ============================================================ */
+
+/* Per-type color palette — vivid, saturated per skill guidelines */
+.t-start    { --tc:#8B9DB0; --tm:#546070; --ts:#2D3848; --tg:rgba(139,157,176,.6); }
+.t-finish   { --tc:#E879F9; --tm:#A855F7; --ts:#6B21A8; --tg:rgba(232,121,249,.8); }
+.t-cyber    { --tc:#FF6B6B; --tm:#EF2020; --ts:#991B1B; --tg:rgba(255,50,50,.7); }
+.t-safe     { --tc:#34D9FE; --tm:#0EA5E9; --ts:#0C4A6E; --tg:rgba(0,212,255,.7); }
+.t-bonus    { --tc:#FBBF24; --tm:#D97706; --ts:#78350F; --tg:rgba(251,191,36,.7); }
+.t-help     { --tc:#34D399; --tm:#059669; --ts:#064E3B; --tg:rgba(52,211,153,.7); }
+.t-firewall { --tc:#FB923C; --tm:#EA580C; --ts:#7C2D12; --tg:rgba(249,115,22,.7); }
+.t-shop     { --tc:#A78BFA; --tm:#7C3AED; --ts:#4C1D95; --tg:rgba(167,139,250,.7); }

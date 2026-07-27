@@ -1,0 +1,144 @@
+FOUND: 
++              className={cn("w-14 h-14 flex items-center justify-center relative z-30 animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80  shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}>
+               <AvatarIcon className="w-8 h-8 text-white" />
+               {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
+             </motion.div>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of u
+FOUND: :               className={cn("w-14 h-14 flex items-center justify-center relative z-30 animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80  shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}>
+162:               <AvatarIcon className="w-8 h-8 text-white" />
+163:               {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
+164:             </motion.div>
+165:           )})}
+166:         </AnimatePresence>
+167:       </div>
+168:       </motion.div>
+169:     );
+170: }, 
+FOUND: 
+-              className={cn("w-14 h-14 flex items-center justify-center relative z-30 animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80  shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}>
+-              <AvatarIcon className="w-8 h-8 text-white" />
+-              {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
+-            </motion.div>
+-          )})}
+-        </AnimatePresence>
+-      </div>
+       </motion.div>
+     );
+-}, (prevProps, nextProps) => {
+-  cons
+FOUND: +                className={cn("absolute w-14 h-14 flex items-center justify-center z-30 animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80 shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}
++                style={{ transformStyle: 'preserve-3d', transform: 'translateZ(30px)' }}
++              >
++                <AvatarIcon className="w-8 h-8 text-white" />
++                {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
++              </motion.div>
++            );
++
+FOUND: -                className={cn("absolute w-14 h-14 flex items-center justify-center z-30 animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80 shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}
+-                style={{ transformStyle: 'preserve-3d', transform: 'translateZ(30px)' }}
++                className="absolute z-30 pointer-events-none"
++                style={{ transformStyle: 'preserve-3d', zIndex: 100 + p.position }}
+               >
+-                <AvatarIcon className="w-8 h-8 text-white" />
+-                {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 
+FOUND:  `Framer Motion` which maps to CSS transforms, maintaining 60FPS on low-end hardware.
+
+5. Files and Code
+*   **Edited Files:**
+    *   `C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx`: Added `stand-up` class logic, refactored player rendering into an independent overlay loop, and added isometric board container.
+    *   `C:\Users\Administrator\scamboard\src\index.css`: Added `.tile-3d` with thickness (`::before`, `::after`) and `.stand-up` class for isometric correction.
+    *   `C:\Users\Administrator\scamboard\src\WebGLDice.tsx`: Rewritten to CSS-only 3D.
+*   **Viewed Files:**
+    *   `C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx`: Contains the core game loop, `movePlayer
+FOUND:  >
+1110:                 <div className={cn("w-14 h-14 flex items-center justify-center animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80 shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}>
+1111:                   <AvatarIcon className="w-8 h-8 text-white" />
+1112:                   {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
+1113:                 </div>
+1114:               </motion.div>
+1115:             );
+1116:           })}
+1117:         </motion.div>
+1118:
+FOUND: sx:1076:                <div className={cn("w-14 h-14 flex items-center justify-center animate-flo
+at rounded-[20px] border-[3px] border-white/80 bg-slate-900/80 shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color,
+ p.glow)}>
+> src\ScamBoardGame.tsx:1077:                  <AvatarIcon className="w-8 h-8 text-white" />
+  src\ScamBoardGame.tsx:1078:                  {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate
+={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none s
+hadow-[0_0_20px_rgba(0,229,255,1)]" />}
+  src\ScamBoardGame.tsx:1079:                </div>
+  src\ScamBoardGame.tsx:1080:        
+FOUND:       >
+-                <div className={cn("w-14 h-14 flex items-center justify-center animate-float rounded-[20px] border-[3px] border-white/80 bg-slate-900/80 shadow-[0_20px_30px_rgba(0,0,0,0.8)] stand-up", p.color, p.glow)}>
+-                  <AvatarIcon className="w-8 h-8 text-white" />
+-                  {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,1)]" />}
++                <div className={cn("w-16 h-16 flex items-center justify-center animate-float rounded-full border-[3px] border-white/60 bg-white/10 back
+FOUND:                <div className={cn("w-16 h-16 flex items-center justify-center animate-float rounded-full border-[3px] border-white/60 bg-white/10 backdrop-blur-md shadow-[0_20px_40px_rgba(0,0,0,0.5)] stand-up relative overflow-hidden", p.glow)}>
+-                  <div className={cn("absolute inset-0 opacity-50", p.color)} />
+-                  <img src={avatarImg} className="w-full h-full object-cover relative z-10 scale-125 drop-shadow-xl" alt="Player piece" />
+-                  {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-full pointer-events-none shadow-[0_0_20px_r
+FOUND: ansformStyle: 'preserve-3d', zIndex: 100 + p.position, width: '56px', height: '80px' }}
+              >
+                <div className="relative w-full h-full flex flex-col items-center justify-end stand-up animate-float">
+                  {/* The freestanding character image */}
+                  <img 
+                    src={avatarImg} 
+                    className="w-auto h-24 max-w-none object-contain relative z-10 drop-shadow-[0_10px_15px_rgba(0,0,0,0.8)] -mb-2" 
+                    style={{ filter: p.isProtected ? 'drop-shadow(0 0 10px rgba(34,211,238,0.8))' : 'none' }}
+                    alt="Player piece" 
+                  />
+                  
+                  {/* 3
+FOUND: Down className="w-10 h-10" />
++                  </motion.div>
++                )}
++                
+                 <div className="relative w-full h-full flex flex-col items-center justify-end stand-up animate-float">
++                  {/* Floating Particle Aura for Current Player */}
++                  {isCurrentPlayer && (
++                    <div className="absolute inset-0 bg-gradient-to-t from-amber-500/30 to-transparent blur-xl rounded-full scale-150 -z-10" />
++                  )}
++
+                   {/* The freestanding character image */}
+                   <img 
+                     src={avatarImg} 
+-                    className="w-auto h-24 max-w-none object-co
+FOUND: Down className="w-10 h-10" />
+-                  </motion.div>
+-                )}
+-                
+-                <div className="relative w-full h-full flex flex-col items-center justify-end stand-up animate-float">
+-                  {/* Floating Particle Aura for Current Player */}
+-                  {isCurrentPlayer && (
+-                    <div className="absolute inset-0 bg-gradient-to-t from-amber-500/30 to-transparent blur-xl rounded-full scale-150 -z-10" />
+-                  )}
+-
+-                  {/* The freestanding character image */}
+-                  <img 
+-                    src={avatarImg} 
+-                    className="w-auto h-24 max-w-none object-co
+FOUND: ness(0.5);
+  z-index: -1;
+}
+
+.tile-3d:hover {
+  transform: translateZ(15px) scale(1.02);
+  box-shadow: inset 0 3px 15px rgba(255,255,255,0.4), 0 0 25px var(--tile-edge, rgba(0,0,0,0.8));
+}
+
+.stand-up {
+  transform: rotateZ(20deg) rotateX(-50deg) translateY(-20px);
+  transform-origin: bottom center;
+}
+
+
+@keyframes slide {
+  from { background-position: 0 0; }
+  to { background-position: 20px 0; }
+}
+
+
+

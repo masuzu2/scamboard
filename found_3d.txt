@@ -1,0 +1,832 @@
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T18:18:10+07:00
+Completed At: 2026-07-26T18:18:10+07:00
+The following changes were made by the multi_replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -164,8 +164,6 @@
+   const [showShop, setShowShop] = useState(false);
+   const [isShaking, setIsShaking] = useState(false);
+   
+-  const [timeLeft, setTimeLeft] = useState(0);
+-
+   const [setupPlayers, setSetupPlayers] = useState([{ name: 'Agent Alpha', avatar: avatarKeys[0], color: playerColors[0], glow: playerGlows[0] }]);
+ 
+   const updateS = (updater: typeof s | ((prev: typeof s) => typeof s)) => {
+@@ -184,20 +184,6 @@
+     return () => { newSocket.disconnect(); };
+   }, []);
+ 
+-  useEffect(() => {
+-    if (s.activeEvent?.type === 'cyber' && s.activeEvent?.expiresAt) {
+-      const interval = setInterval(() => {
+-        const remaining = Math.max(0, Math.ceil((s.activeEvent.expiresAt - Date.now()) / 1000));
+-        setTimeLeft(remaining);
+-        if (remaining === 0 && (!roomCode || localPlayerId === s.players[s.currentPlayerIndex].id)) {
+-           handleCyberAnswer(false, s.activeEvent.usedHelp, true); 
+-        }
+-      }, 500);
+-      return () => clearInterval(interval);
+-    }
+-  }, [s.activeEvent, localPlayerId, roomCode, s.players, s.currentPlayerIndex]);
+-
+-
+   const createRoom = () => {
+     if (socket) {
+       socket.emit('c
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T18:18:30+07:00
+Completed At: 2026-07-26T18:18:30+07:00
+The following changes were made by the multi_replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -91,7 +91,77 @@
+   return board;
+ };
+ 
+-// --- COMPONENTS ---
++// Timer Component to prevent full app re-render every second
++const CyberTimer = ({ expiresAt, isMyTurn, onTimeout }: { expiresAt: number, isMyTurn: boolean, onTimeout: () => void }) => {
++   const [timeLeft, setTimeLeft] = useState(() => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000)));
++
++   useEffect(() => {
++      const interval = setInterval(() => {
++         const remaining = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
++         setTimeLeft(remaining);
++         if (remaining === 0 && isMyTurn) {
++            onTimeout();
++         }
++      }, 500);
++      return () => clearInterval(interval);
++   }, [expiresAt, isMyTurn, onTimeout]);
++
++   return (
++      <div className={cn("text-2xl font-mono font-black flex items-center gap-3 px-4 py-1 rounded", timeLeft <= 3 ? "bg-rose-500/20 text-rose-500 animate-glitch" : "text-white")}>
++         <Clock className="w-6 h-6" /> 00:{timeLeft.toString().padStart(2, '0')}
++      </div>
++   );
++};
++
++// Memoized Board Tile to prevent re-rendering all 28 tiles on every state change
++const MemoizedTile = React.memo(({ til
+
+--- SOURCE: SYSTEM TYPE: CHECKPOINT
+{{ CHECKPOINT 6 }}
+ **The earlier parts of this conversation have been truncated due to its long length. The following content summarizes the truncated context so that you may continue your work. **
+
+
+# User Requests
+The following were user requests from the truncated conversation in chronological order:
+1. ทําทั้งหมดให้มันน่าเล่นกว่านี้ทั้งระบบหรืออะไร
+2. [plugin:vite:oxc] Transform failed with 1 error:
+
+[PARSE_ERROR] Unexpected token. Did you mean `{'>'}` or `&gt;`?
+     ╭─[ src/ScamBoardGame.tsx:436:97 ]
+     │
+ 436 │                 <label className="text-xs font-bold text-emerald-600 uppercase tracking-widest">> SELECT_MODE</label>
+     │                                                                                                 │ 
+     │                                                                                                 ╰─ 
+─────╯
+C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx
+    at transformWithOxc (file:///C:/Users/Administrator/scamboard/node_modules/vite/dist/node/chunks/node.js:4033:19)
+    at TransformPluginContext.transform (file:///C:/Users/Administrator/scamboard/node_modules/vite/dist/node/chunks/node.js:4104:26)
+    at EnvironmentPluginContainer.transform (file:///C:/Users/Administrator/scamboard/node_modules/vite/dist/node/chunks/node.js:30201:51)
+    at async loadAndTransform (file:///
+<truncated 217 bytes>
+3. เเนะนําเพิ่มอะไรอีกไหม
+4. ทํามาให้หมดเลย ขอดีที่สุดด้วย
+5. ใช้skills การตกเเต่งให้มันเเบบไม่เหมือนai มากกว่านี้อ่ะ เต็มที่กั
+
+--- SOURCE: MODEL TYPE: VIEW_FILE
+Created At: 2026-07-26T18:34:37+07:00
+Completed At: 2026-07-26T18:34:38+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1093
+Total Bytes: 66700
+Showing lines 1 to 800
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: import React, { useState, useEffect, useRef } from 'react';
+2: import { motion, AnimatePresence } from 'framer-motion';
+3: import { 
+4:   ShieldAlert, ShieldCheck, Gift, Trophy, TerminalSquare, Play, Dices, Sparkles, 
+5:   Zap, Users, Globe, Wifi, Server, Crosshair, Cpu, Skull, Flame, Coins, Clock, 
+6:   AlertTriangle, Ghost, Bot, User, Fingerprint, Activity, Hexagon, ChevronRight, 
+7:   Share2, Eye, Shield, Lock, ArrowLeftRight, UserX
+8: } from 'lucide-react';
+9: import { clsx, type ClassValue } from 'clsx';
+10: import { twMerge } from 'tailwind-merge';
+11: import { io, Socket } from 'socket.io-client';
+12: import { cyberCards, bonusCards, SHOP_ITEMS, SCAMMER_TAUNTS, type Tile, type TileType, type Player as BasePlayer } from './gameData';
+13: 
+14: function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }
+15: 
+16: type Player = BasePlayer & { items: string[], isSkipped: boolean, isProtected: boolean, plusRoll: number, consecutive: number, badges: string[] };
+17: 
+18: const AvatarMap: Record<string, React.FC<any>>
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T18:37:22+07:00
+Completed At: 2026-07-26T18:37:22+07:00
+
+				The command exited with code 0.
+				Output:
+				  filter: brightness(0.3) saturate(1.5);
+  z-index: -1;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+}
+.tile-3d:hover {
+  transform: perspective(800px) rotateX(15deg) translateY(-8px);
+}
+.tile-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+
+
+--- SOURCE: MODEL TYPE: VIEW_FILE
+Created At: 2026-07-26T18:49:36+07:00
+Completed At: 2026-07-26T18:49:36+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/index.css`
+Total Lines: 131
+Total Bytes: 3743
+Showing lines 1 to 131
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+2: @import "tailwindcss";
+3: 
+4: @theme {
+5:   --font-sans: 'Outfit', sans-serif;
+6:   --font-mono: 'Space Grotesk', monospace;
+7:   
+8:   --color-cyber-bg: #05050A;
+9:   
+10:   --color-neon-cyan: #00E5FF;
+11:   --color-neon-pink: #FF007F;
+12:   --color-neon-purple: #7B2CBF;
+13:   --color-neon-yellow: #FFD600;
+14: }
+15: 
+16: @layer utilities {
+17:   .glass-panel {
+18:     @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)];
+19:   }
+20:   .glass-panel-heavy {
+21:     @apply bg-black/60 backdrop-blur-2xl border border-white/10 shadow-[0_16px_64px_rgba(0,0,0,0.8)];
+22:   }
+23:   .text-glow-cyan {
+24:     text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 0 0 20px rgba(0, 229, 255, 0.3);
+25:   }
+26:   .text-glow-pink {
+27:     text-shadow: 0 0 10px rgba(255, 0, 127, 0.6), 0 0 20px rgba(255, 0, 127, 0.3);
+28:   }
+29:   .box-glow-cyan {
+30:     box-shadow: 0 0 20px rg
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T18:50:08+07:00
+Completed At: 2026-07-26T18:50:08+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\index.css. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1,16 +1,26 @@
+-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Space+Grotesk:wght@400;600;700&display=swap');
++@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+ @import "tailwindcss";
+ 
+ @theme {
+-  --font-sans: 'Outfit', sans-serif;
+-  --font-mono: 'Space Grotesk', monospace;
+-  
+-  --color-cyber-bg: #05050A;
+-  
+-  --color-neon-cyan: #00E5FF;
+-  --color-neon-pink: #FF007F;
+-  --color-neon-purple: #7B2CBF;
+-  --color-neon-yellow: #FFD600;
++  --font-sans: 'Inter', 'IBM Plex Sans Thai', sans-serif;
++  --font-heading: 'Outfit', 'IBM Plex Sans Thai', sans-serif;
++  
++  --color-brand-primary: #3B82F6;
++  --color-brand-secondary: #8B5CF6;
++  --color-brand-success: #22C55E;
++  --color-brand-danger: #EF4444;
++  --color-brand-warning: #F59E0B;
++  --color-brand-info: #06B6D4;
++  
++  --color-bg-base: #0F172A;
++  --color-bg-surface: #1E293B;
++  --color-bg-card: #273449;
++  
++  --color-border-subtle: rgba(255,255,255,0.08);
++  --color-text-main: #FFFFFF;
++  --color-text-muted: #94A3B8;
++  --color
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T18:50:44+07:00
+Completed At: 2026-07-26T18:50:44+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+    return (
+      <div className={cn("tile-3d flex items-center justify-center", 
+          tile.type === 'start' ? 'bg-blue-500/20 border border-cyan-400' : 
+          tile.type === 'finish' ? 'bg-amber-500/20 border border-amber-400' : 
+          tile.type === 'cyber' ? 'bg-pink-500/20 border border-pink-500/50' : 
+          tile.type === 'safe' ? 'bg-emerald-500/20 border border-emerald-500/50' : 
+          tile.type === 'bonus' ? 'bg-purple-500/20 border border-purple-500/50' : 
+          tile.type === 'help' ? 'bg-blue-500/20 border border-blue-500/50' : '')} 
+          style={{ 
+             width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+             borderRadius: '30px',
+             '--tile-edge': tile.type === 'cyber' ? '#9d174d' : tile.type === 'safe' ? '#065f46' : tile.type === 'bonus
+' ? '#4c1d95' : tile.type === 'start' ? '#0891b2' : '#334155' 
+          } as React.CSSProperties}>
+        
+        <div className="absolute top-3 left-4 text-[14px] font-mono font-black text-white/30 tracking-widest">{tile.ind
+ex.toString().padStart(2, '0')}</div>
+        
+        <div className="opacity-90 mt-3">
+          {tile.type === 'start' && <Play className="w-12 h-12 text-blue-400 drop-shadow-[0_0_15px_rgba(0,229
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T18:51:03+07:00
+Completed At: 2026-07-26T18:51:18+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -117,30 +117,32 @@
+ 
+ // Memoized Board Tile to prevent re-rendering all 28 tiles on every state change
+ const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+-  return (
+-    <div className={cn("tile-3d flex items-center justify-center", 
+-        tile.type === 'start' ? 'bg-blue-500/20 border border-cyan-400' : 
+-        tile.type === 'finish' ? 'bg-amber-500/20 border border-amber-400' : 
+-        tile.type === 'cyber' ? 'bg-pink-500/20 border border-pink-500/50' : 
+-        tile.type === 'safe' ? 'bg-emerald-500/20 border border-emerald-500/50' : 
+-        tile.type === 'bonus' ? 'bg-purple-500/20 border border-purple-500/50' : 
+-        tile.type === 'help' ? 'bg-blue-500/20 border border-blue-500/50' : '')} 
+-        style={{ 
+-           width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+-           borderRadius: '30px',
+-           '--tile-edge': tile.type === 'cyber' ? '#9d174d' : tile.type === 'safe' ? '#065f46' : tile.type === 'bonus' ? '#4c1d95' : tile.type === 'start' ? '#0891b2' : '#334155' 
+-        } as React.CSSProperties}>
+-      
+-      <div className="absolute t
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T20:37:24+07:00
+Completed At: 2026-07-26T20:37:25+07:00
+
+				The command exited with code 0.
+				Output:
+				  position: absolute;
+  border-radius: 24px; /* Soft rounded corners, very friendly */
+  transform: perspective(1000px) rotateX(25deg);
+  transform-style: preserve-3d;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.2);
+}
+.tile-3d::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  transform: translateZ(-20px);
+  background: inherit;
+  filter: brightness(0.2) saturate(1.2);
+  z-index: -1;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+}
+.tile-3d:hover {
+  transform: perspective(1000px) rotateX(20deg) translateY(-12px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 3px 8px rgba(255,255,255,0.4);
+}
+.tile-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T20:37:53+07:00
+Completed At: 2026-07-26T20:37:53+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -118,7 +118,11 @@
+ // Memoized Board Tile to prevent re-rendering all 28 tiles on every state change
+ const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+     return (
+-      <div className={cn("tile-3d flex items-center justify-center", 
++      <motion.div 
++          initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
++          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
++          transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
++          className={cn("tile-3d flex items-center justify-center", 
+           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+           tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+           tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+@@ -128,6 +128,7 @@
+           style={{ 
+              width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+              borderRadius: '30px',
++             position: 'absolute',
+              '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'sa
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T20:37:59+07:00
+Completed At: 2026-07-26T20:38:00+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+      return (
+        <motion.div 
+            initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+            transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+            className={cn("tile-3d flex items-center justify-center", 
+            tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+            tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50
+' : 
+            tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+            tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+            tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+            tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+            tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
+            style={{ 
+               width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+               borderRadius: '30px',
+               position: 'absolute',
+               '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bo
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T20:38:06+07:00
+Completed At: 2026-07-26T20:38:06+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+      return (
+        <motion.div 
+            initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+            transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+            className={cn("tile-3d flex items-center justify-center", 
+            tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+            tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50
+' : 
+            tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+            tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+            tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+            tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+            tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
+            style={{ 
+               width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+               borderRadius: '30px',
+               position: 'absolute',
+               '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bo
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T20:44:26+07:00
+Completed At: 2026-07-26T20:44:26+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+      return (
+        <motion.div 
+            initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+            transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+            className={cn("tile-3d flex items-center justify-center", 
+            tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+            tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50
+' : 
+            tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+            tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+            tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+            tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+            tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
+            style={{ 
+               width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+               borderRadius: '30px',
+               position: 'absolute',
+               '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bo
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T21:09:31+07:00
+Completed At: 2026-07-26T21:09:31+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+      return (
+        <motion.div 
+            initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+            transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+            className={cn("tile-3d flex items-center justify-center", 
+            tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+            tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50
+' : 
+            tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+            tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+            tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+            tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+            tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
+            style={{ 
+               width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+               borderRadius: '30px',
+               position: 'absolute',
+               '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bo
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T21:09:37+07:00
+Completed At: 2026-07-26T21:09:38+07:00
+
+				The command exited with code 0.
+				Output:
+				
+> .tile-3d {
+    position: absolute;
+    border-radius: 24px; /* Soft rounded corners, very friendly */
+    transform: perspective(1000px) rotateX(25deg);
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.2);
+  }
+> .tile-3d::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    transform: translateZ(-20px);
+    background: inherit;
+    filter: brightness(0.2) saturate(1.2);
+    z-index: -1;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+  }
+> .tile-3d:hover {
+    transform: perspective(1000px) rotateX(20deg) translateY(-12px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 3px 8px rgba(255,255,255,0.4);
+  }
+> .tile-3d::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+
+
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T21:09:55+07:00
+Completed At: 2026-07-26T21:10:02+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\index.css. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -152,12 +152,12 @@
+ /* Squircle / Rounded Hexagon Board Tile Effect */
+ .tile-3d {
+   position: absolute;
+-  border-radius: 24px; /* Soft rounded corners, very friendly */
+-  transform: perspective(1000px) rotateX(25deg);
++  border-radius: 20px;
+   transform-style: preserve-3d;
+   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+-  box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.2);
+-}
++  box-shadow: inset 0 2px 10px rgba(255,255,255,0.2), 0 0 15px var(--tile-edge, rgba(0,0,0,0.5));
++}
++
+ .tile-3d::after {
+   content: '';
+   position: absolute;
+@@ -164,19 +164,15 @@
+   border-radius: inherit;
+-  transform: translateZ(-20px);
+-  background: inherit;
+-  filter: brightness(0.2) saturate(1.2);
++  transform: translateZ(-25px);
++  background: var(--tile-edge, #1e293b);
+   z-index: -1;
+-  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+-}
+-.tile-3d:hover {
+-  transform: perspective(1000px) rotateX(20deg) translateY(-12px) scale(1.05);
+-  box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 3px 8px rgba(255,255,255,0.4);
+-}
++  box-shadow: 0 15px 30px rgba(0,0,0,0.8);
++}
++
+ .tile-3d::before {
++  /* Front face / sides thickness */
+   content: 
+
+--- SOURCE: MODEL TYPE: VIEW_FILE
+Created At: 2026-07-26T21:12:50+07:00
+Completed At: 2026-07-26T21:12:50+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1129
+Total Bytes: 68199
+Showing lines 110 to 180
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+110:    }, [expiresAt, isMyTurn]);
+111: 
+112:    return (
+113:       <div className={cn("text-2xl font-mono font-black flex items-center gap-3 px-4 py-1 rounded", timeLeft <= 3 ? "bg-red-500/20 text-red-500 animate-glitch" : "text-white")}>
+114:          <Clock className="w-6 h-6" /> 00:{timeLeft.toString().padStart(2, '0')}
+115:       </div>
+116:    );
+117: });
+118: 
+119: // Memoized Board Tile to prevent re-rendering all 28 tiles on every state change
+120: const MemoizedTile = React.memo(({ tile, players }: { tile: Tile, players: Player[] }) => {
+121:     return (
+122:       <motion.div 
+123:           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+124:           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+125:           transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+126:           className={cn("tile-3d flex items-center justify-center", 
+127:           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+128:           tile.type === 'f
+
+--- SOURCE: SYSTEM TYPE: CHECKPOINT
+{{ CHECKPOINT 14 }}
+ **The earlier parts of this conversation have been truncated due to its long length. The following content summarizes the truncated context so that you may continue your work. **
+
+
+# User Requests
+The following were user requests from the truncated conversation in chronological order:
+1. ลูกเต๋าหาย
+2. มันหายจิงเเก้ให้หายขาดด้วย ต่อไปทําเกมๆนี้ให้เล่นจิงเเล้วส่งงานได้เลย
+3. ไม่อ่ะ ลูกเต๋ายังไม่ขึ้นเลย
+4. ไม่อ่ะ ลูกเต๋ายังไม่ขึ้นเลย
+5. ไม่อ่ะ ลูกเต๋ายังไม่ขึ้นเลย
+6. ใช้ponytaill ด้วยเลย ตอนนี้มันยังไม่กลับมาเลย
+7. Lazy Senior Dev เเก้อาการเเลดทีเเล้วทําให้ลื่นที่สุดเล่นสนุก
+8. ลูกเต๋า เอาเเบบลื่นๆดีๆมาก็ได้เเบบนี้มันเเลดอ่ะ
+9. ทําพวก เกมกระดาน ให้ดีที่สุดหน่อย ทั้งตัวในเกมกระดาน หรือเกมกระดาน อ่ะ
+10. ทําให้ตัวมันเดินบนกระดานสวยๆหรือเท่ๆหน่อย ตอนนี้มันดูเเปลกๆ
+
+# Previous Session Summary:
+1. Outstanding User Requests
+*   **Finalize Gameplay Logic (IMPLEMENTATION):** The user wants the game to be fully playable and "ส่งงานได้เลย" (ready for submission/delivery).
+*   **Badge/Achievement Tracking (NOT STARTED):** Finalize the system to persist and track badges as the player progresses.
+*   **Scammer AI Boss Difficulty (NOT STARTED):** Expand the boss encounter logic for better engagement.
+*   **Polish Player Movement (IMPLEMENTATION/POLISHING):** User requested: "ทําให้ตัวมันเดินบนกระดานสวยๆหรือเท่ๆหน่อย ตอนนี้มันดูเเปลกๆ". Current state: Implemented absolute positioning and frame-independent animation for players, but needs final user sign-off on visual flow.
+
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-26T21:58:55+07:00
+Completed At: 2026-07-26T21:58:55+07:00
+
+				The command exited with code 0.
+				Output:
+				
+  src\ScamBoardGame.tsx:125:const MemoizedTile = React.memo(({ tile }: { tile: Tile }) => {
+  src\ScamBoardGame.tsx:126:    return (
+  src\ScamBoardGame.tsx:127:      <motion.div 
+> src\ScamBoardGame.tsx:128:          initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+> src\ScamBoardGame.tsx:129:          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+  src\ScamBoardGame.tsx:130:          transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.
+4 }}
+  src\ScamBoardGame.tsx:131:          className={cn("tile-3d flex items-center justify-center", 
+  src\ScamBoardGame.tsx:132:          tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+  src\ScamBoardGame.tsx:1024:            width: COLS * (TILE_SIZE + TILE_GAP), 
+  src\ScamBoardGame.tsx:1025:            height: Math.ceil(BOARD_SIZE / COLS) * (TILE_SIZE + TILE_GAP),
+  src\ScamBoardGame.tsx:1026:            transformStyle: 'preserve-3d',
+> src\ScamBoardGame.tsx:1027:            transform: 'rotateX(50deg) rotateZ(-20deg)'
+  src\ScamBoardGame.tsx:1028:          }}
+  src\ScamBoardGame.tsx:1029:        >
+  src\ScamBoardGame.tsx:1030:          {/* Glowing Grid Floor */}
+  src\ScamBoardGame.tsx:1084:                  />
+  src\ScamBoardGame.tsx:1085:                  
+  src\ScamBoardGame.tsx:1086:                  {/* 3D Glowing Base / Sh
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-26T21:59:05+07:00
+Completed At: 2026-07-26T21:59:05+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -128,6 +128,7 @@
+           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+           transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
++          style={{ willChange: 'transform, opacity' }}
+           className={cn("tile-3d flex items-center justify-center", 
+           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+           tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.
+
+--- SOURCE: MODEL TYPE: VIEW_FILE
+Created At: 2026-07-26T23:30:11+07:00
+Completed At: 2026-07-26T23:30:11+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1355
+Total Bytes: 82421
+Showing lines 1 to 600
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: import React, { useState, useEffect } from 'react';
+2: import { motion, AnimatePresence } from 'framer-motion';
+3: import { 
+4:   ShieldAlert, ShieldCheck, Gift, Trophy, TerminalSquare, Play, Dices, 
+5:   Zap, Users, Globe, Cpu, Skull, Flame, Coins, Clock, 
+6:   Ghost, Bot, User, Fingerprint, Activity, Hexagon, ChevronRight, 
+7:   Share2, Shield, Lock, ArrowLeftRight, UserX
+8: } from 'lucide-react';
+9: import WebGLDiceOverlay from './WebGLDice';
+10: import { io, Socket } from 'socket.io-client';
+11: import { cyberCards, bonusCards, SHOP_ITEMS, SCAMMER_TAUNTS, type Tile, type TileType, type Player as BasePlayer } from './gameData';
+12: 
+13: // ponytail: yagni - replaced clsx/twMerge with native array join. No generic UI library means no conflicts to merge.
+14: function cn(...inputs: (string | undefined | null | false)[]) { return inputs.filter(Boolean).join(' '); }
+15: 
+16: type Player = BasePlayer & { items: string[], isSkipped: boolean, isProtected: boolean, plusRoll: number, consecutive: number, badges: strin
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-27T00:08:19+07:00
+Completed At: 2026-07-27T00:08:21+07:00
+
+				The command exited with code 0.
+				Output:
+				          animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+          transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+          style={{ willChange: 'transform, opacity' }}
+          className={cn("tile-3d flex items-center justify-center", 
+          tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+          tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+          tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+          tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+          tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+          tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+          tile.type === 'firewall' ? 'bg-orange-500/20 border border-orange-500/50' : 
+          tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
+          style={{ 
+             width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+             borderRadius: '30px',
+
+
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-27T00:08:35+07:00
+Completed At: 2026-07-27T00:08:35+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -210,7 +210,6 @@
+           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+           transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+-          style={{ willChange: 'transform, opacity' }}
+           className={cn("tile-3d flex items-center justify-center", 
+           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+           tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+@@ -225,6 +225,7 @@
+              position: 'absolute',
+              transform: `scale(1)`,
+              transformStyle: 'preserve-3d',
++             willChange: 'transform, opacity',
+              '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bonus' ? '#78350F' : tile.type === 'help' ? '#14532D' : tile.type === 'firewall' ? '#9A3412' : tile.type === 'finish' ? '#4C1D95' : '#334155' 
+           } as React.CSSProperties}
+           id={`tile-${tile.index}`}
+[diff_block_end]
+
+Please note that the above snippet only shows
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-27T00:15:25+07:00
+Completed At: 2026-07-27T00:15:25+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -210,6 +210,7 @@
+           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+           transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
++          style={{ willChange: 'transform, opacity' }}
+           className={cn("tile-3d flex items-center justify-center", 
+           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+           tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+@@ -222,9 +222,6 @@
+              width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+              borderRadius: '30px',
+              position: 'absolute',
+-             transform: `scale(1)`,
+-             transformStyle: 'preserve-3d',
+-             willChange: 'transform, opacity',
+              '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bonus' ? '#78350F' : tile.type === 'help' ? '#14532D' : tile.type === 'firewall' ? '#9A3412' : tile.type === 'finish' ? '#4C1D95' : '#334155' 
+           } as React.
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-27T00:15:38+07:00
+Completed At: 2026-07-27T00:15:38+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -210,7 +210,6 @@
+           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+           transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+-          style={{ willChange: 'transform, opacity' }}
+           className={cn("tile-3d flex items-center justify-center", 
+           tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+           tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+@@ -223,6 +223,7 @@
+              width: TILE_SIZE, height: TILE_SIZE, left: tile.x, top: tile.y, 
+              borderRadius: '30px',
+              position: 'absolute',
++             willChange: 'transform, opacity',
+              '--tile-edge': tile.type === 'cyber' ? '#7F1D1D' : tile.type === 'safe' ? '#1E3A8A' : tile.type === 'bonus' ? '#78350F' : tile.type === 'help' ? '#14532D' : tile.type === 'firewall' ? '#9A3412' : tile.type === 'finish' ? '#4C1D95' : '#334155' 
+           } as React.CSSProperties}
+           id={`tile-${tile.index}`}
+[diff_block_end]
+
+Please note 
+
+--- SOURCE: MODEL TYPE: CODE_ACTION
+Created At: 2026-07-27T00:23:37+07:00
+Completed At: 2026-07-27T00:23:37+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -208,37 +208,68 @@
+     return (
+       <motion.div 
+           initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
++          initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: 60 }}
+           animate={{ opacity: 1, y: 0, scale: 1, rotateX: 25 }}
+-          transition={{ duration: 0.6, delay: tile.index * 0.05, type: 'spring', bounce: 0.4 }}
+-          className={cn("tile-3d flex items-center justify-center", 
+-          tile.type === 'start' ? 'bg-white/10 border border-white/30' : 
+-          tile.type === 'finish' ? 'bg-gradient-to-tr from-blue-500 via-violet-500 to-pink-500 border border-white/50' : 
+-          tile.type === 'cyber' ? 'bg-red-500/20 border border-red-500/50' : 
+-          tile.type === 'safe' ? 'bg-blue-500/20 border border-blue-500/50' : 
+-          tile.type === 'bonus' ? 'bg-amber-400/20 border border-amber-400/50' : 
+-          tile.type === 'help' ? 'bg-green-500/20 border border-green-500/50' : 
+-          tile.type === 'firewall' ? 'bg-orange-500/20 border border-orange-500/50' : 
+-          tile.type === 'shop' ? 'bg-violet-500/20 border border-violet-500/50' : '')} 
++          transition={{ durat
+
+--- SOURCE: MODEL TYPE: RUN_COMMAND
+Created At: 2026-07-27T00:33:58+07:00
+Completed At: 2026-07-27T00:34:00+07:00
+
+				The command exited with code 0.
+				Output:
+				@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'IBM Plex Sans Thai', sans-serif;
+  --font-heading: 'Outfit', 'IBM Plex Sans Thai', sans-serif;
+  
+  --color-brand-primary: #3B82F6;
+  --color-brand-secondary: #8B5CF6;
+  --color-brand-success: #22C55E;
+  --color-brand-danger: #EF4444;
+  --color-brand-warning: #F59E0B;
+  --color-brand-info: #06B6D4;
+  
+  --color-bg-base: #0F172A;
+  --color-bg-surface: #1E293B;
+  --color-bg-card: #273449;
+  
+  --color-border-subtle: rgba(255,255,255,0.08);
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #94A3B8;
+  --color-accent-glow: #60A5FA;
+  --color-accent-coin: #FACC15;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-[#1E293B]/80 backdrop-blur-sm border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+  }
+  .glass-card {
+    @apply bg-[#273449]/90 backdrop-blur-sm border border-white/10 shadow-[0_16px_64px_rgba(0,0,0,0.6)];
+  }
+  .text-glow-primary {
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+  .text-glow-danger {
+    text-shadow: 0 0 15px rgba(239, 68, 68, 0.8), 0 0 30px rgba(239, 68, 68, 0.4);
+  }
+  .text-gradient-primary {
+    ba
+

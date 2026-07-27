@@ -1,0 +1,607 @@
+--- SOURCE: MODEL
+Created At: 2026-07-26T18:34:44+07:00
+Completed At: 2026-07-26T18:34:44+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1093
+Total Bytes: 66700
+Showing lines 800 to 1093
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+800:               <div className="bg-purple-900/30 border-l-4 border-purple-500 p-4 flex justify-between items-center mb-6">
+801:                  <span className="font-bold text-purple-400 uppercase text-xs tracking-[0.2em]">Black Market</span>
+802:                  <span className="font-mono font-black text-white bg-black/80 border border-white/20 px-3 py-1 rounded flex items-center gap-2"><Coins className="w-4 h-4 text-yellow-400"/> {s.players.find(p => p.id === localPlayerId)?.coins || currentPlayer?.coins}</span>
+803:               </div>
+804:               {SHOP_ITEMS.map(item => (
+805:                  <div key={item.id} className="bg-black/60 border border-white/10 p-5 rounded-xl flex flex-col gap-3 relative hover:border-white/30 transition-colors">
+806:                     <div className="flex justify-between items-start">
+807:                        <div className="font-bold text-white text-lg flex items-center gap-3">
+808:                           {getShopIcon(item.icon)}
+809:                           {item.name
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T18:39:30+07:00
+Completed At: 2026-07-26T18:40:22+07:00
+The following changes were made by the multi_replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1,10 +1,10 @@
+-import React, { useState, useEffect, useRef } from 'react';
++import React, { useState, useEffect } from 'react';
+ import { motion, AnimatePresence } from 'framer-motion';
+ import { 
+-  ShieldAlert, ShieldCheck, Gift, Trophy, TerminalSquare, Play, Dices, Sparkles, 
+-  Zap, Users, Globe, Wifi, Server, Crosshair, Cpu, Skull, Flame, Coins, Clock, 
++  ShieldAlert, ShieldCheck, Gift, Trophy, TerminalSquare, Play, Dices, 
++  Zap, Users, Globe, Wifi, Cpu, Skull, Flame, Coins, Clock, 
+   AlertTriangle, Ghost, Bot, User, Fingerprint, Activity, Hexagon, ChevronRight, 
+-  Share2, Eye, Shield, Lock, ArrowLeftRight, UserX
++  Share2, Shield, Lock, ArrowLeftRight, UserX
+ } from 'lucide-react';
+ import { clsx, type ClassValue } from 'clsx';
+ import { twMerge } from 'tailwind-merge';
+@@ -142,7 +142,7 @@
+       <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-2 content-center pointer-events-none z-20 translate-z-[30px]" style={{ transform: 'translateZ(40px)' }}>
+         <AnimatePresence>
+           {players.filter(p => p.position === tile.index).map((p) => {
+-             const AvatarIcon = AvatarM
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T20:36:33+07:00
+Completed At: 2026-07-26T20:36:34+07:00
+
+				The command exited with code 0.
+				Output:
+				<truncated 8 lines>
+sition={{ type: 'spring', stiffness: 200, damping: 15 }} key={p.id} 
+                className={cn("w-14 h-14 flex items-center justify-center relative z-30 animate-float rounded-[20px] bo
+rder-2-[3px] border-white/80 bg-slate-900/80 backdrop-blur-md shadow-[0_20px_30px_rgba(0,0,0,0.8)]", p.color, p.glow)}>
+                <AvatarIcon className="w-8 h-8 text-white" />
+                {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1.4 }} c
+lassName="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow-[0_0_20px_rgba(0,229,255,
+1)]" />}
+              </motion.div>
+            )})}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }, (prevProps, nextProps) => {
+>   const prevPlayersOnTile = prevProps.players.filter(p => p.position === prevProps.tile.index).map(p => p.id).join(',
+');
+>   const nextPlayersOnTile = nextProps.players.filter(p => p.position === nextProps.tile.index).map(p => p.id).join(',
+');
+    return prevPlayersOnTile === nextPlayersOnTile;
+  });
+  
+  const Particles = React.memo(({ count = 20, color = "#00E5FF", startType = "center" }: { count?: number, color?: stri
+ng, startType?: string }) => (
+    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+      {Array.from({ len
+
+--- SOURCE: SYSTEM
+{{ CHECKPOINT 10 }}
+ **The earlier parts of this conversation have been truncated due to its long length. The following content summarizes the truncated context so that you may continue your work. **
+
+
+# User Requests
+The following were user requests from the truncated conversation in chronological order:
+1. ใช้ponytaill ตรวจหน่อย เเล้วทําให้เว็บเกมนี้ดีที่สุด
+2. ใช้ponytaill ตรวจหน่อย เเล้วทําให้เว็บเกมนี้ดีที่สุด เเต่หน้าตายังสวยหรือน่าเล่นอยู่
+3. ทําให้เว็บลื่น ที่สุดเเต่ยังสวยเหมือนเดิม
+4. # MASTER UI/UX PROMPT — ScamBoard (Cyber Security Board Game)
+
+You are a Senior UI/UX Designer, Game Designer, Art Director, Frontend Architect, and AAA Game Interface Designer.
+
+Your mission is to design the **most beautiful, modern, interactive, and professional web board game** called **ScamBoard**.
+
+The design must look like a commercial-quality game rather than a school project.
+
+---
+
+# Overall Design Direction
+
+Design Style:
+
+* Modern
+* Cyber Security
+* Cyberpunk (Soft)
+* Glassmorphism
+* Minimal
+* Premium
+* Playful
+* Friendly
+* Accessible
+* Responsive
+* AAA Quality
+* High-end Mobile Game
+* Nintendo Party Game feeling
+* Duolingo level friendliness
+* Fall Guys colorful atmosphere
+* Mario Party interaction
+* Discord modern interface
+* Riot Games polished animation
+
+The game should feel educational without looking educational.
+
+Players should immediately think:
+
+> "This looks like a real game."
+
+NOT
+
+> "This looks like a school assignment."
+
+---
+
+# Color Palette
+
+Primary
+
+#3B82F6
+
+Sec
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T20:54:32+07:00
+Completed At: 2026-07-26T20:54:32+07:00
+
+				The command exited with code 0.
+				Output:
+				
+  
+  export default function ScamBoardGame() {
+    const [s, setS] = useState({
+>     view: 'menu' as 'menu' | 'setup' | 'playing' | 'finished' | 'gameover_boss',
+      mode: 'race' as 'race' | 'score',
+      players: [] as Player[],
+      currentPlayerIndex: 0,
+      AudioEngine.playWin();
+      const initializedPlayers = setupPlayers.map((p, i) => ({
+        id: `p${i}`, name: p.name, avatar: p.avatar, color: p.color, glow: p.glow,
+>       position: 0, coins: 5, hasLifeline: false, finished: false,
+        items: [], isSkipped: false, isProtected: false, plusRoll: 0, consecutive: 0, badges: []
+      }));
+      updateViewTransition(prev => ({
+        const nextState = { ...prev, turnPhase: 'resolvingEvent' as any };
+        
+        if (p.position === BOARD_SIZE - 1) {
+>         const finishedCount = prev.players.filter(pl => pl.finished).length;
+          const newPlayers = JSON.parse(JSON.stringify(prev.players)) as Player[];
+>         newPlayers[prev.currentPlayerIndex]!.finished = true;
+>         (newPlayers[prev.currentPlayerIndex]! as any).finishOrder = finishedCount + 1;
+          if (!newPlayers[prev.currentPlayerIndex]!.badges.includes('MAINFRAME HACKER')) {
+             newPlayers[prev.currentPlayerIndex]!.badges.push('MAINFRAME HACKER');
+          }
+        }
+  
+        const checkGameOver = () => {
+>      
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:09:21+07:00
+Completed At: 2026-07-26T21:09:21+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1112
+Total Bytes: 67490
+Showing lines 750 to 950
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+750:       <div className="scanlines absolute inset-0 z-50 pointer-events-none opacity-60" />
+751:       
+752:       {s.turnPhase === 'rolling' && (
+753:          <WebGLDiceOverlay 
+754:            targetValue={s.diceValue} 
+755:            onLanded={() => {
+756:               AudioEngine.playTone(600, 'sine', 0.2, 0.2);
+757:               updateS(prev => ({ ...prev, turnPhase: 'moving' }));
+758:               movePlayer(s.diceValue);
+759:            }} 
+760:          />
+761:       )}
+762:       
+763:       {particles && <Particles key={particles.key} count={40} color={particles.color} startType={particles.type} />}
+764:       
+765:       {floatingTexts.map(ft => (
+766:          <FloatingText key={ft.id} text={ft.text} color={ft.color} x={ft.x} y={ft.y} onComplete={() => setFloatingTexts(prev => prev.filter(f => f.id !== ft.id))} />
+767:       ))}
+768: 
+769:       <AnimatePresence>
+770:         {toastMessage && (
+771:           <motion.div initial={{ opacity: 0, y: -50, scale: 0.9 }} animate={{ opacity: 1,
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:10:41+07:00
+Completed At: 2026-07-26T21:10:42+07:00
+
+				The command exited with code 0.
+				Output:
+				<truncated 1 lines>
+={{ scale: 1, y: 0 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }} key={p.id} 
+  src\ScamBoardGame.tsx:161:              className={cn("w-14 h-14 flex items-center justify-center relative z-30 anima
+te-float rounded-[20px] border-2-[3px] border-white/80 bg-slate-900/80  shadow-[0_20px_30px_rgba(0,0,0,0.8)]", p.color,
+ p.glow)}>
+  src\ScamBoardGame.tsx:162:              <AvatarIcon className="w-8 h-8 text-white" />
+  src\ScamBoardGame.tsx:163:              {p.isProtected && <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ o
+pacity: 1, scale: 1.4 }} className="absolute inset-0 border-[3px] border-cyan-400 rounded-xl pointer-events-none shadow
+-[0_0_20px_rgba(0,229,255,1)]" />}
+  src\ScamBoardGame.tsx:164:            </motion.div>
+  src\ScamBoardGame.tsx:165:          )})}
+  src\ScamBoardGame.tsx:166:        </AnimatePresence>
+  src\ScamBoardGame.tsx:167:      </div>
+  src\ScamBoardGame.tsx:168:      </motion.div>
+  src\ScamBoardGame.tsx:169:    );
+  src\ScamBoardGame.tsx:170:}, (prevProps, nextProps) => {
+  src\ScamBoardGame.tsx:171:  const prevPlayersOnTile = prevProps.players.filter(p => p.position === prevProps.tile.ind
+ex).map(p => p.id).join(',');
+  src\ScamBoardGame.tsx:172:  const nextPlayersOnTile = nextProps.players.filter(p => p.position === nextProps.tile.ind
+ex).map(p => p.id
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:13:20+07:00
+Completed At: 2026-07-26T21:13:20+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -902,8 +902,44 @@
+           </svg>
+ 
+           {s.board.map((tile) => (
+-            <MemoizedTile key={tile.index} tile={tile} players={s.players} />
++            <MemoizedTile key={tile.index} tile={tile} />
+           ))}
++
++          {/* Render Players on Board */}
++          {s.players.map((p) => {
++            const currentTile = s.board[p.position] || s.board[0];
++            const AvatarIcon = AvatarMap[p.avatar] || User;
++            
++            // Calculate offset if multiple players are on the same tile
++            const playersOnThisTile = s.players.filter(player => player.position === p.position);
++            const myIndexOnTile = playersOnThisTile.findIndex(player => player.id === p.id);
++            const totalOnTile = playersOnThisTile.length;
++            
++            let offsetX = 0;
++            let offsetY = 0;
++            if (totalOnTile > 1) {
++              const angle = (myIndexOnTile / totalOnTile) * Math.PI * 2;
++              const radius = 25; // Distance from center
++              offsetX = Math.cos(angle) * radius;
++              offsetY = Math.sin(angle) * radius;
++            }
++
++   
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:16:37+07:00
+Completed At: 2026-07-26T21:16:37+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1193
+Total Bytes: 71793
+Showing lines 825 to 925
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+825:           </div>
+826:         </div>
+827: 
+828:         {/* BOSS HEALTH HUD */}
+829:         <div className="mb-6 p-5 rounded-xl bg-slate-900 border border-red-500/50 relative overflow-hidden box-glow-pink">
+830:            <div className="absolute top-0 left-0 w-2 h-full bg-red-500" />
+831:            <div className="flex justify-between items-center mb-3 ml-4 relative z-10">
+832:               <span className="text-xs font-black text-red-500 uppercase tracking-widest flex items-center gap-2"><Skull className="w-4 h-4" /> THREAT LEVEL</span>
+833:               <span className="text-lg font-black text-white font-mono">{s.bossHealth}%</span>
+834:            </div>
+835:            <div className="h-3 ml-4 w-[calc(100%-1rem)] bg-slate-900 border border-white/10 rounded-full overflow-hidden relative z-10">
+836:               <div className="h-full bg-gradient-to-r from-rose-600 to-pink-500 transition-all duration-700 relative" style={{ width: `${s.bossHealth}%` }}>
+837:                  <div className="absolute in
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:17:32+07:00
+Completed At: 2026-07-26T21:17:32+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -826,31 +826,48 @@
+         </div>
+ 
+         {/* BOSS HEALTH HUD */}
+-        <div className="mb-6 p-5 rounded-xl bg-slate-900 border border-red-500/50 relative overflow-hidden box-glow-pink">
+-           <div className="absolute top-0 left-0 w-2 h-full bg-red-500" />
+-           <div className="flex justify-between items-center mb-3 ml-4 relative z-10">
+-              <span className="text-xs font-black text-red-500 uppercase tracking-widest flex items-center gap-2"><Skull className="w-4 h-4" /> THREAT LEVEL</span>
+-              <span className="text-lg font-black text-white font-mono">{s.bossHealth}%</span>
+-           </div>
+-           <div className="h-3 ml-4 w-[calc(100%-1rem)] bg-slate-900 border border-white/10 rounded-full overflow-hidden relative z-10">
+-              <div className="h-full bg-gradient-to-r from-rose-600 to-pink-500 transition-all duration-700 relative" style={{ width: `${s.bossHealth}%` }}>
+-                 <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_25%,rgba(255,255,255,0.2)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.2)_75%,rgba(255,255,255,0.
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:28:04+07:00
+Completed At: 2026-07-26T21:28:04+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1321
+Total Bytes: 84931
+Showing lines 1050 to 1150
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1050:       {/* Interactive 3D Board Area */}
+1051:       <div className="flex-1 relative overflow-hidden" style={{ perspective: '1500px' }}>
+1052:         <motion.div 
+1053:           className="absolute origin-center" 
+1054:           animate={{ x: cameraX, y: cameraY }} 
+1055:           transition={{ type: "spring", stiffness: 45, damping: 25 }} 
+1056:           style={{ 
+1057:             width: COLS * (TILE_SIZE + TILE_GAP), 
+1058:             height: Math.ceil(BOARD_SIZE / COLS) * (TILE_SIZE + TILE_GAP),
+1059:             transformStyle: 'preserve-3d',
+1060:             transform: 'rotateX(50deg) rotateZ(-20deg)'
+1061:           }}
+1062:         >
+1063:           {/* Glowing Grid Floor */}
+1064:           <div className="absolute inset-0 z-[-1] pointer-events-none" style={{ 
+1065:              backgroundImage: 'linear-gradient(rgba(0,229,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.1) 1px, transparent 1px)', 
+1066:              backgroundSize: '100px 100px',
+1067:            
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:37:38+07:00
+Completed At: 2026-07-26T21:37:38+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1383
+Total Bytes: 92669
+Showing lines 951 to 1050
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+951:                 </div>
+952:               )}
+953:            </div>
+954:         </div>
+955:         
+956:         {showShop ? (
+957:            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-3 px-2">
+958:               <div className="bg-purple-900/30 border-l-4 border-purple-500 p-4 flex justify-between items-center mb-6 relative" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 15px 100%, 0 calc(100% - 15px))' }}>
+959:                  <span className="font-bold text-purple-400 uppercase text-xs tracking-[0.2em]">Black Market</span>
+960:                  <span className="font-mono font-black text-white bg-slate-950 border border-white/10 px-3 py-1 rounded flex items-center gap-2 shadow-[inset_0_0_10px_rgba(255,255,255,0.1)]"><Coins className="w-4 h-4 text-yellow-400"/> {s.players.find(p => p.id === localPlayerId)?.coins || currentPlayer?.coins}</span>
+961:               </div>
+962:               {SHOP_ITEMS.map(item => (
+963:                  <div key={item.id} className="bg-slate-
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:38:41+07:00
+Completed At: 2026-07-26T21:38:41+07:00
+The following changes were made by the replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -860,40 +860,35 @@
+         )}
+       </AnimatePresence>
+ 
+-      {/* Sidebar Dashboard HUD */}
+-      <div className="w-full md:w-[420px] bg-slate-950 md:border-r-2 border-white/5 flex flex-col z-40 shrink-0 font-sans shadow-[30px_0_100px_rgba(0,0,0,1)] relative overflow-hidden">
+-        {/* Animated Background Gradients inside Sidebar */}
+-        <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-blue-600/10 to-transparent pointer-events-none" />
+-        <div className="absolute top-[-50px] right-[-50px] w-40 h-40 bg-pink-500/10 blur-3xl rounded-full pointer-events-none" />
++      {/* Sidebar Dashboard HUD - Premium Cinematic Dark Mode */}
++      <div className="w-full md:w-[420px] bg-[#020203]/95 backdrop-blur-2xl md:border-r border-white/[0.08] flex flex-col z-40 shrink-0 font-sans shadow-2xl relative overflow-hidden">
++        {/* Cinematic Ambient Glow */}
++        <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
++        <div className="absolute bottom-[-100px] right-[-100px] w-[300px] h-[300px] bg-purple-500/10 blur-[10
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:44:44+07:00
+Completed At: 2026-07-26T21:44:45+07:00
+
+				The command exited with code 0.
+				Output:
+				<truncated 89 lines>
+  src\ScamBoardGame.tsx:959:                         {p.isSkipped && <div className="absolute inset-0 bg-rose-500/90 fl
+ex items-center justify-center rounded-[12px] backdrop-blur-sm"><Zap className="w-5 h-5 text-white"/></div>}
+  src\ScamBoardGame.tsx:960:                       </div>
+  src\ScamBoardGame.tsx:961:                       
+  src\ScamBoardGame.tsx:962:                       <div className="flex-1 min-w-0">
+  src\ScamBoardGame.tsx:963:                         <div className="font-bold text-base text-slate-200 flex items-cent
+er gap-2 truncate">
+  src\ScamBoardGame.tsx:964:                            {p.name} 
+  src\ScamBoardGame.tsx:965:                            {p.badges.map((_: string, i: number) => <Trophy key={i} classNa
+me="w-3.5 h-3.5 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]" />)}
+  src\ScamBoardGame.tsx:966:                         </div>
+  src\ScamBoardGame.tsx:967:                         
+  src\ScamBoardGame.tsx:1034:             boxShadow: 'inset 0 0 200px rgba(15,23,42,1)'
+  src\ScamBoardGame.tsx:1035:          }} />
+  src\ScamBoardGame.tsx:1036:
+  src\ScamBoardGame.tsx:1037:          <svg className="absolute inset-0 z-0 pointer-events-none overflow-visible" style
+={{ width: '100%', height: '100%', transform: 'translateZ(-10px)' }}>
+  src\ScamBoardGame.tsx:1038:      
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:44:52+07:00
+Completed At: 2026-07-26T21:44:52+07:00
+
+				The command exited with code 0.
+				Output:
+				
+  src\ScamBoardGame.tsx:754:                </div>
+  src\ScamBoardGame.tsx:755:                <div className="flex-1 bg-black/20 border border-white/5 rounded-2xl p-4 ov
+erflow-y-auto space-y-3 custom-scrollbar relative shadow-inner">
+  src\ScamBoardGame.tsx:756:                   {setupPlayers.map((p, idx) => {
+> src\ScamBoardGame.tsx:757:                      const AvatarIcon = AvatarMap[p.avatar] || User;
+  src\ScamBoardGame.tsx:758:                      return (
+  src\ScamBoardGame.tsx:759:                      <div key={idx} className="flex gap-4 items-center bg-white/5 p-3 roun
+ded-xl border border-white/5 hover:border-cyan-400/30 transition-colors relative z-10">
+  src\ScamBoardGame.tsx:760:                         <div className={cn("w-10 h-10 flex items-center justify-center rou
+nded-[10px] shadow-sm relative border border-white/10 shrink-0", p.color)}>
+> src\ScamBoardGame.tsx:761:                            <AvatarIcon className="w-5 h-5 text-white" />
+  src\ScamBoardGame.tsx:762:                         </div>
+  src\ScamBoardGame.tsx:763:                         <input value={p.name} onChange={(e) => { const n = [...setupPlayer
+s]; n[idx].name = e.target.value; setSetupPlayers(n); }} className="flex-1 bg-transparent border-none focus:outline-non
+e text-white font-bold text-sm placeholder:text-slate-600 font-mono border-
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:45:09+07:00
+Completed At: 2026-07-26T21:45:09+07:00
+
+				The command exited with code 0.
+				Output:
+				
+  src\ScamBoardGame.tsx:754:                </div>
+  src\ScamBoardGame.tsx:755:                <div className="flex-1 bg-black/20 border border-white/5 rounded-2xl p-4 ov
+erflow-y-auto space-y-3 custom-scrollbar relative shadow-inner">
+  src\ScamBoardGame.tsx:756:                   {setupPlayers.map((p, idx) => {
+> src\ScamBoardGame.tsx:757:                      const AvatarIcon = AvatarMap[p.avatar] || User;
+  src\ScamBoardGame.tsx:758:                      return (
+  src\ScamBoardGame.tsx:759:                      <div key={idx} className="flex gap-4 items-center bg-white/5 p-3 roun
+ded-xl border border-white/5 hover:border-cyan-400/30 transition-colors relative z-10">
+  src\ScamBoardGame.tsx:760:                         <div className={cn("w-10 h-10 flex items-center justify-center rou
+nded-[10px] shadow-sm relative border border-white/10 shrink-0", p.color)}>
+  src\ScamBoardGame.tsx:761:                            <AvatarIcon className="w-5 h-5 text-white" />
+  src\ScamBoardGame.tsx:762:                         </div>
+  src\ScamBoardGame.tsx:763:                         <input value={p.name} onChange={(e) => { const n = [...setupPlayer
+s]; n[idx].name = e.target.value; setSetupPlayers(n); }} className="flex-1 bg-transparent border-none focus:outline-non
+e text-white font-bold text-sm placeholder:text-slate-600 font-mono border-
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:45:45+07:00
+Completed At: 2026-07-26T21:45:45+07:00
+The following changes were made by the multi_replace_file_content tool to: C:\Users\Administrator\scamboard\src\ScamBoardGame.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -15,8 +15,13 @@
+ 
+ type Player = BasePlayer & { items: string[], isSkipped: boolean, isProtected: boolean, plusRoll: number, consecutive: number, badges: string[] };
+ 
+-const AvatarMap: Record<string, React.FC<any>> = {
+-  Ghost, Bot, Cpu, User, Fingerprint, Activity
++const AvatarMap: Record<string, string> = {
++  'Cyber Security Expert': '/characters/Cyber Security Expert.png',
++  'Detective': '/characters/Detective.png',
++  'Ethical Hacker': '/characters/Ethical Hacker.png',
++  'Programmer': '/characters/Programmer.png',
++  'Robot Assistant': '/characters/Robot Assistant.png',
++  'Student': '/characters/Student.png',
+ };
+ 
+ const avatarKeys = Object.keys(AvatarMap);
+@@ -753,11 +753,10 @@
+                 </div>
+                 <div className="flex-1 bg-black/20 border border-white/5 rounded-2xl p-4 overflow-y-auto space-y-3 custom-scrollbar relative shadow-inner">
+                    {setupPlayers.map((p, idx) => {
+-                      const AvatarIcon = AvatarMap[p.avatar] || User;
+                       return (
+                       <div key={idx} className="flex gap-4 items-center bg-white/5 p-3 rounded-xl border 
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T21:47:57+07:00
+Completed At: 2026-07-26T21:47:58+07:00
+
+				The command exited with code 0.
+				Output:
+				
+  src\ScamBoardGame.tsx:1037:             boxShadow: 'inset 0 0 200px rgba(15,23,42,1)'
+  src\ScamBoardGame.tsx:1038:          }} />
+  src\ScamBoardGame.tsx:1039:
+  src\ScamBoardGame.tsx:1040:          <svg className="absolute inset-0 z-0 pointer-events-none overflow-visible" style
+={{ width: '100%', height: '100%', transform: 'translateZ(-10px)' }}>
+  src\ScamBoardGame.tsx:1041:            <path d={s.board.map((t, i) => { const cx = t.x + TILE_SIZE / 2; const cy = t.
+y + TILE_SIZE / 2; return i === 0 ? `M ${cx} ${cy}` : `L ${cx} ${cy}`; }).join(' ')} fill="none" stroke="rgba(255, 255,
+ 255, 0.05)" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round" />
+  src\ScamBoardGame.tsx:1042:            <path d={s.board.map((t, i) => { const cx = t.x + TILE_SIZE / 2; const cy = t.
+y + TILE_SIZE / 2; return i === 0 ? `M ${cx} ${cy}` : `L ${cx} ${cy}`; }).join(' ')} fill="none" stroke="rgba(0, 229, 2
+55, 0.6)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="12 12" className="animate-pulse
+" />
+  src\ScamBoardGame.tsx:1043:          </svg>
+  src\ScamBoardGame.tsx:1044:
+  src\ScamBoardGame.tsx:1045:          {s.board.map((tile) => (
+  src\ScamBoardGame.tsx:1046:            <MemoizedTile key={tile.index} tile={tile} />
+  src\ScamBoardGame.tsx:1047:          ))}
+  src\ScamBoardGame.tsx:1048:
+  src\ScamBoa
+
+--- SOURCE: MODEL
+Created At: 2026-07-26T23:59:53+07:00
+Completed At: 2026-07-26T23:59:53+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1518
+Total Bytes: 91702
+Showing lines 1010 to 1100
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1010:               </div>
+1011:            </div>
+1012:         </div>
+1013:         
+1014:         {/* Main Content Area (Shop or Players) */}
+1015:         <div className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-6 relative z-10 pt-4">
+1016:           {showShop ? (
+1017:              <div className="space-y-4">
+1018:                 <div className="flex justify-between items-center mb-2 px-1">
+1019:                    <span className="font-black text-purple-400 uppercase text-xs tracking-widest flex items-center gap-2">
+1020:                      <Coins className="w-4 h-4"/> Black Market
+1021:                    </span>
+1022:                    <span className="font-mono font-bold text-white text-xs bg-white/10 px-2 py-1 rounded-md">
+1023:                      {s.players.find(p => p.id === localPlayerId)?.coins || currentPlayer?.coins} CR
+1024:                    </span>
+1025:                 </div>
+1026:                 {SHOP_ITEMS.map(item => (
+1027:                    <div key={item.id} classNam
+
+--- SOURCE: MODEL
+Created At: 2026-07-27T00:06:41+07:00
+Completed At: 2026-07-27T00:06:41+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1545
+Total Bytes: 93674
+Showing lines 1160 to 1190
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1160:           }}
+1161:         >
+1162:           {/* Glowing Grid Floor */}
+1163:           <div className="absolute inset-0 z-[-1] pointer-events-none" style={{ 
+1164:              backgroundImage: 'linear-gradient(rgba(0,229,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.1) 1px, transparent 1px)', 
+1165:              backgroundSize: '100px 100px',
+1166:              transform: 'translateZ(-50px)',
+1167:              boxShadow: 'inset 0 0 200px rgba(15,23,42,1)'
+1168:           }} />
+1169: 
+1170:           <svg className="absolute inset-0 z-0 pointer-events-none overflow-visible" style={{ width: '100%', height: '100%', transform: 'translateZ(-10px)' }}>
+1171:             <path d={s.board.map((t, i) => { const cx = t.x + TILE_SIZE / 2; const cy = t.y + TILE_SIZE / 2; return i === 0 ? `M ${cx} ${cy}` : `L ${cx} ${cy}`; }).join(' ')} fill="none" stroke="rgba(255, 255, 255, 0.05)" strokeWidth="24" strokeLinecap="round" strokeLinejoin="round" />
+1172:             <path d={s.board.map((t, i)
+
+--- SOURCE: MODEL
+Created At: 2026-07-27T00:23:48+07:00
+Tool is running as a background task with task id: 845bec6f-1dfc-4814-be15-f2daf447a982/task-2020
+Task Description: powershell -Command "Select-String -Path src\ScamBoardGame.tsx -Pattern 's.players.map' -Context 0,20"
+Task logs are available at: file:///C:/Users/Administrator/.gemini/antigravity-cli/brain/845bec6f-1dfc-4814-be15-f2daf447a982/.system_generated/tasks/task-2020.log
+
+--- SOURCE: SYSTEM
+The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
+
+<SYSTEM_MESSAGE>
+[Message] timestamp=2026-07-26T17:23:50Z sender=845bec6f-1dfc-4814-be15-f2daf447a982/task-2020 priority=MESSAGE_PRIORITY_HIGH content=Task id "845bec6f-1dfc-4814-be15-f2daf447a982/task-2020" finished with result:
+
+				The command exited with code 0.
+				Output:
+				
+> src\ScamBoardGame.tsx:1108:               {s.players.map((p, idx) => {
+  src\ScamBoardGame.tsx:1109:                 const isTurn = s.currentPlayerIndex === idx && !p.finished;
+  src\ScamBoardGame.tsx:1110:                 return (
+  src\ScamBoardGame.tsx:1111:                   <motion.div key={p.id} animate={{ scale: isTurn ? 1.02 : 1, opacity: 
+p.finished ? 0.4 : 1 }}
+  src\ScamBoardGame.tsx:1112:                     className={cn(
+  src\ScamBoardGame.tsx:1113:                        "p-4 rounded-[16px] border transition-all duration-300 relative 
+overflow-hidden group", 
+  src\ScamBoardGame.tsx:1114:                        isTurn ? "bg-blue-500/10 border-blue-500/30 
+shadow-[0_4px_30px_rgba(59,130,246,0.1)]" : "bg-white/[0.02] border-white/[0.05] hover:bg-white/[0.04]"
+  src\ScamBoardGame.tsx:1115:                     )}>
+  src\ScamBoardGame.tsx:1116:                     
+  src\ScamBoardGame.tsx:1117:                     <div className="flex items-center gap-4 relative z-10">
+  src\ScamBoardGame.tsx:1118:                       <div class
+
+--- SOURCE: MODEL
+Created At: 2026-07-27T00:33:41+07:00
+Completed At: 2026-07-27T00:33:41+07:00
+File Path: `file:///C:/Users/Administrator/scamboard/src/ScamBoardGame.tsx`
+Total Lines: 1527
+Total Bytes: 92013
+Showing lines 1100 to 1300
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1100:                            <span className="w-1 h-1 rounded-full bg-white/20" />
+1101:                            <span className="text-slate-500 font-mono font-medium text-[10px] flex items-center gap-1">
+1102:                              BAL <span className="text-amber-400 font-bold">{p.coins}</span>
+1103:                            </span>
+1104:                          </div>
+1105:                          
+1106:                          {p.items.length > 0 && (
+1107:                             <div className="flex flex-wrap gap-1.5 mt-2.5">
+1108:                               {p.items.map((it: string, i: number) => (
+1109:                                  <button key={i} onClick={() => activateItem(it)} disabled={!isMyTurn || s.turnPhase !== 'idle'} 
+1110:                                     className="px-2 py-0.5 bg-white/5 hover:bg-white/10 text-[9px] text-slate-300 hover:text-white font-bold uppercase tracking-wider transition-colors disabled:opacity-50 rounded border border-white/10">
+1111:       
+
